@@ -3,174 +3,539 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>數值方法與分析 - 課程簡報</title>
+    <title>數值方法與分析 - 精緻學術簡報</title>
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-    <!-- KaTeX 數學公式渲染引擎 -->
+    <!-- KaTeX 數學公式渲染 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderAllMath();"></script>
 
     <style>
-        .slide-content { display: none; }
-        .slide-content.active { display: block; }
+        .slide-page { display: none; }
+        .slide-page.active { display: block; }
+        .katex-display { margin: 0.5em 0 !important; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-700">
 
-    <!-- 頂部導航欄 -->
-    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-indigo-400">數值方法與分析 (Numerical Method & Analysis)</h1>
-        <div class="text-sm text-slate-400" id="slide-indicator">Slide 1 / 5</div>
+    <!-- 頂部進度條 -->
+    <div class="w-full bg-slate-200 h-1.5 fixed top-0 left-0 z-50">
+        <div id="progress-bar" class="bg-blue-600 h-1.5 transition-all duration-300 w-0"></div>
+    </div>
+
+    <!-- 頂部導覽列 -->
+    <header class="bg-white border-b border-slate-200 shadow-sm px-6 py-3.5 sticky top-0 z-40 flex justify-between items-center mt-1.5">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-md tracking-wider uppercase">Course Notes</div>
+            <h1 class="text-lg font-bold text-slate-800 hidden sm:block">數值方法與分析 (Numerical Methods)</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <span class="text-sm font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200" id="slide-indicator">Slide 1 / 7</span>
+            <button onclick="toggleGridModal()" class="text-slate-600 hover:text-blue-600 p-1.5 rounded-lg hover:bg-slate-100 transition" title="目錄總覽">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
     </header>
 
-    <!-- 簡報主體區域 -->
-    <main class="flex-1 max-w-5xl w-full mx-auto p-6">
+    <!-- 主內容區 -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-4 md:p-8">
         
-        <!-- Slide 1: 課程簡介 -->
-        <section class="slide-content active space-y-6">
-            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第一章：建模與數值方法概論</h2>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
-                <p class="text-slate-300">數值方法是將工程與科學問題轉換為電腦可執行的算術與邏輯運算步驟。</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <h3 class="font-semibold text-emerald-400 mb-2">解析解 (Analytical Solution)</h3>
-                        <p class="text-sm text-slate-300">利用微積分求得精確的閉式解 (Closed-form Solution)。</p>
+        <!-- SLIDE 1: 課程簡介與核心觀念 -->
+        <section class="slide-page active space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Part 1 • Chapter 1</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">建模、數值方法與計算機架構</h2>
                     </div>
-                    <div class="bg-slate-700/50 p-4 rounded-lg">
-                        <h3 class="font-semibold text-cyan-400 mb-2">數值解 (Numerical Solution)</h3>
-                        <p class="text-sm text-slate-300">利用有限差分與迭代程序獲得極度接近真值的近似解。</p>
+                    <span class="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">概論</span>
+                </div>
+
+                <!-- 流程架構圖 -->
+                <div class="space-y-2">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">實務問題解決工作流程 (Problem Solving Flow)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center relative">
+                            <div class="text-xs font-bold text-slate-400 mb-1">STEP 1</div>
+                            <div class="font-bold text-slate-800 text-sm">物理/工程問題</div>
+                            <div class="text-xs text-slate-500 mt-1">落體、電路、結構</div>
+                        </div>
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-center">
+                            <div class="text-xs font-bold text-blue-400 mb-1">STEP 2</div>
+                            <div class="font-bold text-blue-900 text-sm">數學模型建立</div>
+                            <div class="text-xs text-blue-600 mt-1">守恆定律、微分方程</div>
+                        </div>
+                        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
+                            <div class="text-xs font-bold text-emerald-500 mb-1">STEP 3</div>
+                            <div class="font-bold text-emerald-900 text-sm">數值演算法設計</div>
+                            <div class="text-xs text-emerald-600 mt-1">有限差分、代數重構</div>
+                        </div>
+                        <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-center">
+                            <div class="text-xs font-bold text-indigo-400 mb-1">STEP 4</div>
+                            <div class="font-bold text-indigo-900 text-sm">電腦實作與驗證</div>
+                            <div class="text-xs text-indigo-600 mt-1">MATLAB / 誤差控制</div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- 對照表格 -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-600">
+                                <th class="p-3 font-semibold">比較項目</th>
+                                <th class="p-3 font-semibold text-blue-700">解析解 (Analytical Solution)</th>
+                                <th class="p-3 font-semibold text-emerald-700">數值解 (Numerical Solution)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="p-3 font-medium text-slate-700">基本定義</td>
+                                <td class="p-3 text-slate-600">利用微積分求得精確的閉式解 (Closed-form)</td>
+                                <td class="p-3 text-slate-600">利用算術與邏輯運算獲得高精度近似解</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium text-slate-700">精確度</td>
+                                <td class="p-3 text-slate-600">100% 精確 (零數學誤差)</td>
+                                <td class="p-3 text-slate-600">受捨入誤差與截斷誤差影響，可控制容許誤差</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium text-slate-700">適用性</td>
+                                <td class="p-3 text-slate-600">僅限於簡單/線性/特定幾何系統</td>
+                                <td class="p-3 text-slate-600">適用於複雜、非線性、真實工程問題</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 2: 蹦極跳者自由落體案例 (包含修復後的公式) -->
-        <section class="slide-content space-y-6">
-            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">案例解析：蹦極跳者自由落體</h2>
-            
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
-                <p class="text-slate-300">
-                    當運動達到平衡時，系統趨於穩態，終端速度表示為 $v_t$。
-                </p>
+        <!-- SLIDE 2: 蹦極跳者自由落體案例 -->
+        <section class="slide-page space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Case Study • Chapter 1</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">案例解析：蹦極跳者自由落體</h2>
+                    </div>
+                    <span class="bg-emerald-50 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium">物理建模</span>
+                </div>
 
-                <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700">
-                    <span class="text-sm font-semibold text-indigo-400">微分方程模型：</span>
-                    <div class="my-2 text-center text-lg">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Governing Differential Equation</span>
+                        <p class="text-sm text-slate-700">下落速度 $v$ 隨時間 $t$ 的變化率可由牛頓第二運動定律導出：</p>
+                    </div>
+                    <div class="bg-white px-6 py-3 rounded-lg border border-slate-300 shadow-sm text-center">
                         $$\frac{dv}{dt} = g - \frac{c_d}{m}v^2$$
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-700/40 p-4 rounded-lg border border-slate-600">
-                        <h3 class="font-semibold text-cyan-400 mb-2">解析解 (Analytical Solution)</h3>
-                        <p class="text-xs text-slate-400 mb-2">利用微積分求得精確閉式解：</p>
-                        <div class="text-center my-2">
+                <!-- 雙欄對照卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 解析解卡片 -->
+                    <div class="p-5 bg-blue-50/60 rounded-xl border border-blue-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-blue-900">解析解 (Analytical Solution)</h3>
+                            <span class="text-xs bg-blue-200 text-blue-800 px-2 py-0.5 rounded font-mono">Calculus</span>
+                        </div>
+                        <p class="text-xs text-slate-600">由微積分積分求得精確雙曲正切解：</p>
+                        <div class="bg-white p-3 rounded-lg border border-blue-200 text-center shadow-sm">
                             $$v(t) = \sqrt{\frac{gm}{c_d}}\tanh\left(\sqrt{\frac{gc_d}{m}}t\right)$$
                         </div>
+                        <p class="text-xs text-slate-500">當 $t \to \infty$ 時，到達終端速度 $v_t = \sqrt{\frac{gm}{c_d}}$ (穩態解)。</p>
                     </div>
 
-                    <div class="bg-slate-700/40 p-4 rounded-lg border border-slate-600">
-                        <h3 class="font-semibold text-emerald-400 mb-2">數值解 (Euler's Method)</h3>
-                        <p class="text-xs text-slate-400 mb-2">利用有限差分近似斜率：</p>
-                        <div class="text-center my-2">
+                    <!-- 數值解卡片 -->
+                    <div class="p-5 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-emerald-900">數值解 (Euler's Method)</h3>
+                            <span class="text-xs bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-mono">Finite Difference</span>
+                        </div>
+                        <p class="text-xs text-slate-600">以向前差分近似導數 $\frac{dv}{dt} \approx \frac{\Delta v}{\Delta t}$：</p>
+                        <div class="bg-white p-3 rounded-lg border border-emerald-200 text-center shadow-sm">
                             $$v_{i+1} = v_i + \left(g - \frac{c_d}{m}v_i^2\right)\Delta t$$
+                        </div>
+                        <p class="text-xs text-slate-500">逐步遞推求得各時間點的近似速度值。</p>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-sm flex items-start space-x-3">
+                    <span class="text-amber-600 font-bold text-base">💡</span>
+                    <div>
+                        <span class="font-bold">數值估算核心通則：</span>
+                        <div class="my-1">$$\text{New Value} = \text{Old Value} + \text{Slope} \times \text{Step Size}$$</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: 誤差定義與 Trade-Off 模擬器 -->
+        <section class="slide-page space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Part 1 • Chapter 4</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">誤差分析與總誤差權衡 (Error Analysis)</h2>
+                    </div>
+                    <span class="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-full font-medium">誤差控制</span>
+                </div>
+
+                <!-- 誤差公式表格 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-2">
+                        <div class="text-xs font-bold text-slate-500">真實相對誤差百分比 $\varepsilon_t$</div>
+                        <div class="bg-white p-2 rounded border border-slate-200">
+                            $$\varepsilon_t = \left|\frac{\text{True Value} - \text{Approx}}{\text{True Value}}\right| \times 100\%$$
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-2">
+                        <div class="text-xs font-bold text-slate-500">近似相對誤差百分比 $\varepsilon_a$</div>
+                        <div class="bg-white p-2 rounded border border-slate-200">
+                            $$\varepsilon_a = \left|\frac{x_r^{\text{new}} - x_r^{\text{old}}}{x_r^{\text{new}}}\right| \times 100\%$$
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-2">
+                        <div class="text-xs font-bold text-slate-500">迭代停止準則 $\varepsilon_s$</div>
+                        <div class="bg-white p-2 rounded border border-slate-200">
+                            $$\varepsilon_s = (0.5 \times 10^{2-n})\%$$
+                        </div>
+                        <p class="text-xs text-slate-500">保證結果精確至 $n$ 位有效數字</p>
+                    </div>
+                </div>
+
+                <!-- 互動式 Trade-off 模擬器 -->
+                <div class="p-5 bg-blue-50/50 rounded-xl border border-blue-200 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-blue-900 text-sm">互動體驗：總數值誤差 Trade-off 探索器</h3>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full font-semibold" id="slider-val">步長 h = 0.01</span>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <input type="range" id="step-slider" min="0.000001" max="0.1" step="0.000001" value="0.01" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="updateErrorSim(this.value)">
+                        <div class="flex justify-between text-xs text-slate-500">
+                            <span>微小步長 ($h \to 0$)</span>
+                            <span>最佳步長 $h_{\text{opt}}$</span>
+                            <span>較大步長 ($h \to 0.1$)</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+                            <div class="text-xs text-slate-500">截斷誤差 (Truncation)</div>
+                            <div class="text-sm font-bold text-indigo-600 mt-1" id="err-trunc">0.000500</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">隨 $h$ 減小而降低</div>
+                        </div>
+                        <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+                            <div class="text-xs text-slate-500">捨入誤差 (Roundoff)</div>
+                            <div class="text-sm font-bold text-amber-600 mt-1" id="err-round">0.000001</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">隨 $h$ 減小而增加</div>
+                        </div>
+                        <div class="p-3 bg-blue-600 text-white rounded-lg shadow-sm">
+                            <div class="text-xs opacity-80">總數值誤差 (Total Error)</div>
+                            <div class="text-sm font-bold mt-1" id="err-total">0.000501</div>
+                            <div class="text-[10px] opacity-80 mt-0.5">兩者之和極小化</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: 包圍法 (Bracketing Methods) -->
+        <section class="slide-page space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Part 2 • Chapter 5</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">求解非線性根：包圍法 (Bracketing Methods)</h2>
+                    </div>
+                    <span class="bg-emerald-50 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium">絕對收斂</span>
+                </div>
+
+                <p class="text-sm text-slate-600">若函數 $f(x)$ 在區間 $[x_l, x_u]$ 內連續且滿足 $f(x_l) \cdot f(x_u) < 0$，則該區間內必包含奇數個根。</p>
+
+                <!-- 演算法圖形化卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-900">1. 二分法 (Bisection Method)</h3>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">對半劃分</span>
+                        </div>
+                        <p class="text-xs text-slate-600">每次將包含根的區間均等對半劃分：</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-center shadow-sm">
+                            $$x_r = \frac{x_l + x_u}{2}$$
+                        </div>
+                        <ul class="text-xs text-slate-500 list-disc list-inside space-y-1">
+                            <li><strong>優點：</strong> 穩定、100% 保證收斂。</li>
+                            <li><strong>缺點：</strong> 收斂速度較慢（線性收斂）。</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-900">2. 試位法 (False Position Method)</h3>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-semibold">線性內插</span>
+                        </div>
+                        <p class="text-xs text-slate-600">利用兩端點連線與 x 軸交點作為估計值：</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-center shadow-sm">
+                            $$x_r = x_u - \frac{f(x_u)(x_l - x_u)}{f(x_l) - f(x_u)}$$
+                        </div>
+                        <ul class="text-xs text-slate-500 list-disc list-inside space-y-1">
+                            <li><strong>優點：</strong> 通常比二分法收斂快。</li>
+                            <li><strong>陷阱：</strong> 若函數曲率過大易產生單邊性 (One-sidedness)。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-100 rounded-xl text-xs text-slate-600 flex items-center justify-between">
+                    <span>💡 <strong>遞增搜尋法 (Incremental Search)：</strong> 沿區間逐步檢查 $f(x)$ 符號變化以確定 Initial Bracket。</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: 開放法 (Open Methods) -->
+        <section class="slide-page space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Part 2 • Chapter 6</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">求解非線性根：開放法 (Open Methods)</h2>
+                    </div>
+                    <span class="bg-purple-50 text-purple-700 text-xs px-3 py-1 rounded-full font-medium">高速收斂</span>
+                </div>
+
+                <!-- 三欄佈局 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <h3 class="font-bold text-slate-800 text-sm">固定點迭代法</h3>
+                        <p class="text-xs text-slate-500">將 $f(x)=0$ 改寫為 $x_{i+1} = g(x_i)$。</p>
+                        <div class="bg-white p-2 rounded border border-slate-200 text-center">
+                            $$x_{i+1} = g(x_i)$$
+                        </div>
+                        <p class="text-[11px] text-slate-500">收斂條件：$|g'(x)| < 1$</p>
+                    </div>
+
+                    <div class="p-4 bg-purple-50/60 border border-purple-200 rounded-xl space-y-2">
+                        <h3 class="font-bold text-purple-900 text-sm">牛頓-拉夫生法</h3>
+                        <p class="text-xs text-slate-600">利用切線斜率進行二次收斂迭代。</p>
+                        <div class="bg-white p-2 rounded border border-purple-200 text-center">
+                            $$x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}$$
+                        </div>
+                        <p class="text-[11px] text-purple-700 font-semibold">具備二次收斂優點 (Quadratic)</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <h3 class="font-bold text-slate-800 text-sm">正割法 (Secant Method)</h3>
+                        <p class="text-xs text-slate-500">以有限差分替代難解的導數 $f'(x_i)$。</p>
+                        <div class="bg-white p-2 rounded border border-slate-200 text-center">
+                            $$f'(x_i) \approx \frac{f(x_{i-1}) - f(x_i)}{x_{i-1} - x_i}$$
+                        </div>
+                        <p class="text-[11px] text-slate-500">只需函數值，不需顯式導數</p>
+                    </div>
+                </div>
+
+                <!-- Brent's Method 與 fzero 說明卡片 -->
+                <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-blue-900 text-sm">布倫特法 (Brent's Method) & MATLAB fzero</h4>
+                        <p class="text-xs text-blue-700 mt-0.5">結合包圍法的穩定度與反二次內插法/正割法的高速優勢，為 MATLAB 內建函式 <code class="bg-blue-100 px-1 py-0.5 rounded font-mono">fzero</code> 之核心算法。</p>
+                    </div>
+                    <span class="text-xs bg-blue-600 text-white font-mono px-2.5 py-1 rounded shadow-sm hidden sm:inline-block">fzero(fun, x0)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: 高斯消去法 (Gauss Elimination) -->
+        <section class="slide-page space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Part 3 • Chapter 9</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">線性系統：高斯消去法與軸元選擇</h2>
+                    </div>
+                    <span class="bg-indigo-50 text-indigo-700 text-xs px-3 py-1 rounded-full font-medium">矩陣運算</span>
+                </div>
+
+                <!-- 演算法兩階段示意圖 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-blue-600 text-white text-xs font-bold rounded-full flex items-center justify-center">1</span>
+                            <h3 class="font-bold text-slate-800">向前消去 (Forward Elimination)</h3>
+                        </div>
+                        <p class="text-xs text-slate-600">將增廣矩陣 $[A|b]$ 消去轉換為上三角矩陣 (Upper Triangular Matrix)：</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-center font-mono text-xs text-slate-700">
+                            $$\begin{bmatrix} a_{11} & a_{12} & a_{13} \\ 0 & a'_{22} & a'_{23} \\ 0 & 0 & a''_{33} \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} b_1 \\ b'_2 \\ b''_3 \end{bmatrix}$$
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center">2</span>
+                            <h3 class="font-bold text-slate-800">向後代換 (Back Substitution)</h3>
+                        </div>
+                        <p class="text-xs text-slate-600">從最後一個變數 $x_n$ 逆向求解至 $x_1$：</p>
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 text-center">
+                            $$x_i = \frac{b_i - \sum_{j=i+1}^n a_{ij}x_j}{a_{ii}}$$
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-indigo-950/50 p-4 rounded-lg border border-indigo-800 text-sm">
-                    💡 <strong>數值估算核心通則：</strong> 
-                    $$\text{New Value} = \text{Old Value} + \text{Slope} \times \text{Step Size}$$
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: 誤差分析 -->
-        <section class="slide-content space-y-6">
-            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第四章：捨入誤差與截斷誤差</h2>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
-                <h3 class="text-lg font-semibold text-indigo-300">相對誤差與停止準則</h3>
-                <p class="text-slate-300">近似相對誤差百分比 $\varepsilon_a$ 計算公式：</p>
-                <div class="text-center my-3">
-                    $$\varepsilon_a = \left\vert{} \frac{x_r^{\text{new}} - x_r^{\text{old}}}{x_r^{\text{new}}} \right\vert{} \times 100\%$$
-                </div>
-                <p class="text-slate-300">當滿足以下條件時停止迭代：</p>
-                <div class="text-center my-3">
-                    $$\varepsilon_a < \varepsilon_s = (0.5 \times 10^{2-n})\%$$
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: 二分法與牛頓法 -->
-        <section class="slide-content space-y-6">
-            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第五與六章：求解非線性根</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 class="font-bold text-amber-400 text-lg mb-2">二分法 (Bisection)</h3>
-                    <p class="text-sm text-slate-300 mb-3">包圍法，將區間對半劃分：</p>
-                    <div class="text-center my-2">
-                        $$x_r = \frac{x_l + x_u}{2}$$
+                <!-- 軸元選擇與特點對照 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-amber-50/60 border border-amber-200 rounded-xl space-y-1">
+                        <h4 class="font-bold text-amber-900 text-sm">部分軸元選擇 (Partial Pivoting)</h4>
+                        <p class="text-xs text-amber-800">在消去前搜尋當前欄位中絕對值最大的元素並對換列次，防止除以零並降低相減銷去 (Subtractive Cancellation) 累積誤差。</p>
                     </div>
-                </div>
-                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <h3 class="font-bold text-purple-400 text-lg mb-2">牛頓-拉夫生法 (Newton-Raphson)</h3>
-                    <p class="text-sm text-slate-300 mb-3">開放法，利用切線斜率迭代：</p>
-                    <div class="text-center my-2">
-                        $$x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}$$
+                    <div class="p-4 bg-indigo-50/60 border border-indigo-200 rounded-xl space-y-1">
+                        <h4 class="font-bold text-indigo-900 text-sm">計算複雜度 (Flops)</h4>
+                        <p class="text-xs text-indigo-800">向前消去約需 $\frac{2n^3}{3}$ 次浮點運算，向後代換約需 $n^2$ 次，當矩陣規模 $n$ 擴大時向前消去佔絕大部分計算量。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 5: 高斯消去法 -->
-        <section class="slide-content space-y-6">
-            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第九章：高斯消去法 (Gauss Elimination)</h2>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
-                <p class="text-slate-300">求解線性系統 $A \mathbf{x} = \mathbf{b}$ 的標準兩階段步驟：</p>
-                <ol class="list-decimal list-inside space-y-2 text-slate-300">
-                    <li><strong>向前消去 (Forward Elimination)</strong>：將係數矩陣轉換為上三角矩陣。</li>
-                    <li><strong>向後代換 (Back Substitution)</strong>：從最後一個變數依序求解：
-                        $$\mathbf{x}_i = \frac{b_i - \sum_{j=i+1}^n a_{ij}x_j}{a_{ii}}$$
-                    </li>
-                </ol>
+        <!-- SLIDE 7: MATLAB 函式對照與總結 -->
+        <section class="slide-page space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Summary • Quick Reference</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">數值方法與 MATLAB 內建函式速查表</h2>
+                    </div>
+                    <span class="bg-slate-100 text-slate-700 text-xs px-3 py-1 rounded-full font-medium">總結速查</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-700">
+                                <th class="p-3 font-semibold">數值問題分類</th>
+                                <th class="p-3 font-semibold">核心演算法</th>
+                                <th class="p-3 font-semibold text-blue-600">MATLAB 內建函式</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs">
+                            <tr>
+                                <td class="p-3 font-medium text-slate-800">單變數非線性求根</td>
+                                <td class="p-3 text-slate-600">Bisection / Newton-Raphson / Brent's Method</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">fzero(fun, x0)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium text-slate-800">多項式求根</td>
+                                <td class="p-3 text-slate-600">Companion Matrix 特徵值法</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">roots(p)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium text-slate-800">線性方程組求解 $A\mathbf{x}=\mathbf{b}$</td>
+                                <td class="p-3 text-slate-600">Gauss Elimination with Pivoting</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">x = A \ b</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium text-slate-800">單變數極值搜尋</td>
+                                <td class="p-3 text-slate-600">Golden-Section Search / Parabolic Interpolation</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">fminbnd(fun, x1, x2)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-md flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-base">準備好應考與複習了嗎？</h3>
+                        <p class="text-xs text-blue-100 mt-1">掌握誤差 Trade-off、二分法 vs 牛頓法收斂特性與高斯消去法 Pivot 原理是考試的核心重點！</p>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- 底部控制列 -->
-    <footer class="bg-slate-800 border-t border-slate-700 px-6 py-4 flex justify-between items-center max-w-5xl w-full mx-auto rounded-t-xl">
-        <button id="prev-btn" onclick="changeSlide(-1)" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition disabled:opacity-40">上一頁</button>
-        <button id="next-btn" onclick="changeSlide(1)" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition disabled:opacity-40">下一頁</button>
+    <!-- 底部控制導航列 -->
+    <footer class="bg-white border-t border-slate-200 px-6 py-4 sticky bottom-0 z-40">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <button id="prev-btn" onclick="changeSlide(-1)" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl border border-slate-300 transition text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                ← 上一頁
+            </button>
+            
+            <div class="text-xs text-slate-400 hidden sm:block">
+                使用 <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-600">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-600">→</kbd> 方向鍵切換投影片
+            </div>
+
+            <button id="next-btn" onclick="changeSlide(1)" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-sm transition text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                下一頁 →
+            </button>
+        </div>
     </footer>
 
-    <!-- JavaScript 邏輯 -->
+    <!-- 全螢幕目錄 Modal -->
+    <div id="grid-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-lg">簡報章節總覽</h3>
+                <button onclick="toggleGridModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto" id="modal-grid-content">
+                <!-- 由 JS 動態生成目錄卡片 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 切換邏輯與 KaTeX 初始化 -->
     <script>
         let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide-content');
+        const slides = document.querySelectorAll('.slide-page');
         const indicator = document.getElementById('slide-indicator');
+        const progressBar = document.getElementById('progress-bar');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
 
-        // 全局 KaTeX 渲染函式
+        const slideTitles = [
+            "Part 1 • Ch 1: 建模與數值方法概論",
+            "Part 1 • Ch 1: 蹦極跳者自由落體案例",
+            "Part 1 • Ch 4: 誤差分析與 Trade-Off",
+            "Part 2 • Ch 5: 求根包圍法 (Bracketing)",
+            "Part 2 • Ch 6: 求根開放法 (Open Methods)",
+            "Part 3 • Ch 9: 高斯消去法與軸元選擇",
+            "Summary: 數值方法與 MATLAB 函式速查"
+        ];
+
+        // 渲染數學公式
         function renderAllMath() {
             if (typeof renderMathInElement === 'function') {
                 renderMathInElement(document.body, {
                     delimiters: [
-                        { left: '$$', right: '$$', display: true },  // 區塊公式
-                        { left: '$', right: '$', display: false },   // 行內公式
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
                         { left: '\\(', right: '\\)', display: false },
-                        { left: '[', right: ']', display: true }
+                        { left: '\\[', right: '\\]', display: true }
                     ],
                     throwOnError: false
                 });
             }
         }
 
-        // 切換投影片 logic
+        // 切換 Slide
         function showSlide(index) {
             slides.forEach((slide, i) => {
                 slide.classList.toggle('active', i === index);
@@ -178,29 +543,72 @@
             currentSlide = index;
             indicator.textContent = `Slide ${index + 1} / ${slides.length}`;
             
+            // 更新進度條
+            const progress = ((index + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === slides.length - 1;
 
-            // 每次切換頁面時重新解析 KaTeX 公式
+            // 重新執行 KaTeX 渲染
             renderAllMath();
         }
 
-        function changeSlide(direction) {
-            let target = currentSlide + direction;
+        function changeSlide(dir) {
+            let target = currentSlide + dir;
             if (target >= 0 && target < slides.length) {
                 showSlide(target);
             }
         }
 
-        // 鍵盤左右方向鍵支援
+        // 目錄 Modal 切換
+        function toggleGridModal() {
+            const modal = document.getElementById('grid-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // 初始化生成 Modal 內容
+        function initModalGrid() {
+            const container = document.getElementById('modal-grid-content');
+            container.innerHTML = '';
+            slideTitles.forEach((title, i) => {
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border text-sm cursor-pointer transition flex items-center justify-between ${i === currentSlide ? 'bg-blue-50 border-blue-300 font-bold text-blue-700' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-700'}`;
+                card.innerHTML = `<span>${i + 1}. ${title}</span><span class="text-xs opacity-60">→</span>`;
+                card.onclick = () => {
+                    showSlide(i);
+                    toggleGridModal();
+                };
+                container.appendChild(card);
+            });
+        }
+
+        // 誤差 Trade-off 模擬器邏輯
+        function updateErrorSim(hVal) {
+            const h = parseFloat(hVal);
+            document.getElementById('slider-val').textContent = `步長 h = ${h.toFixed(6)}`;
+            
+            // 模擬公式
+            const truncErr = 0.05 * h;               // 截斷誤差隨 h 正比下降
+            const roundErr = 1e-8 / (h + 1e-12);     // 捨入誤差隨 h 降低而發散
+            const totalErr = truncErr + roundErr;
+
+            document.getElementById('err-trunc').textContent = truncErr.toFixed(7);
+            document.getElementById('err-round').textContent = roundErr.toFixed(7);
+            document.getElementById('err-total').textContent = totalErr.toFixed(7);
+        }
+
+        // 鍵盤監聽
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') changeSlide(1);
             if (e.key === 'ArrowLeft') changeSlide(-1);
         });
 
-        // 初始載入渲染
+        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             showSlide(0);
+            initModalGrid();
+            updateErrorSim(0.01);
         });
     </script>
 </body>
