@@ -1,1167 +1,207 @@
-```html
 <!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>數值方法與分析 (Numerical Method and Analysis) 互動簡報</title>
-    <!-- Tailwind CSS -->
+    <title>數值方法與分析 - 課程簡報</title>
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            900: '#1e3a8a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Chart.js for Interactive Simulators -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- KaTeX for Math Expressions -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- KaTeX 數學公式渲染引擎 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderAllMath();"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-        .slide-transition {
-            transition: all 0.3s ease-in-out;
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.5);
-            border-radius: 3px;
-        }
+        .slide-content { display: none; }
+        .slide-content.active { display: block; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden transition-colors duration-300">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
 
-    <!-- Top Navigation Bar & Progress -->
-    <header class="sticky top-0 z-40 bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-700/50 px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-            <button id="toc-btn" class="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="目錄大綱">
-                <i class="fa-solid fa-list-ul"></i>
-            </button>
-            <button id="grid-btn" class="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="投影片總覽">
-                <i class="fa-solid fa-border-all"></i>
-            </button>
-            <div class="h-4 w-[1px] bg-slate-700 hidden sm:block"></div>
-            <h1 class="text-sm font-semibold text-slate-200 hidden sm:block truncate max-w-xs md:max-w-md">
-                數值方法與分析 (Numerical Method & Analysis)
-            </h1>
-        </div>
-
-        <!-- Slide Indicator & Quick Jumper -->
-        <div class="flex items-center space-x-2">
-            <span class="text-xs font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-full">
-                Slide <span id="current-slide-num">1</span> / <span id="total-slide-num">9</span>
-            </span>
-        </div>
-
-        <!-- Right Tools -->
-        <div class="flex items-center space-x-2">
-            <button id="theme-toggle" class="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-amber-400 transition" title="切換主題">
-                <i class="fa-solid fa-moon" id="theme-icon"></i>
-            </button>
-            <button id="fullscreen-btn" class="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="全螢幕">
-                <i class="fa-solid fa-expand"></i>
-            </button>
-        </div>
+    <!-- 頂部導航欄 -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-indigo-400">數值方法與分析 (Numerical Method & Analysis)</h1>
+        <div class="text-sm text-slate-400" id="slide-indicator">Slide 1 / 5</div>
     </header>
 
-    <!-- Top Progress Bar -->
-    <div class="w-full bg-slate-800 h-1">
-        <div id="progress-bar" class="bg-indigo-500 h-1 transition-all duration-300" style="width: 11%;"></div>
-    </div>
-
-    <!-- Main Slide Viewer Area -->
-    <main class="flex-1 flex items-center justify-center p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full relative">
+    <!-- 簡報主體區域 -->
+    <main class="flex-1 max-w-5xl w-full mx-auto p-6">
         
-        <!-- Slide 1: Course Roadmap -->
-        <section class="slide-content w-full hidden" data-slide="1">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-700/60 pb-5">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Course Overview</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">課程架構與完整學習地圖 (Course Roadmap)</h2>
+        <!-- Slide 1: 課程簡介 -->
+        <section class="slide-content active space-y-6">
+            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第一章：建模與數值方法概論</h2>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <p class="text-slate-300">數值方法是將工程與科學問題轉換為電腦可執行的算術與邏輯運算步驟。</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-700/50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-emerald-400 mb-2">解析解 (Analytical Solution)</h3>
+                        <p class="text-sm text-slate-300">利用微積分求得精確的閉式解 (Closed-form Solution)。</p>
                     </div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 w-max">
-                        <i class="fa-solid fa-graduation-cap mr-1.5"></i> 6 大核心領域
-                    </span>
+                    <div class="bg-slate-700/50 p-4 rounded-lg">
+                        <h3 class="font-semibold text-cyan-400 mb-2">數值解 (Numerical Solution)</h3>
+                        <p class="text-sm text-slate-300">利用有限差分與迭代程序獲得極度接近真值的近似解。</p>
+                    </div>
                 </div>
+            </div>
+        </section>
 
-                <p class="text-slate-300 text-sm md:text-base leading-relaxed">
-                    本課程旨在將科學與工程中的連續數學問題，轉化為計算機可執行的算術與邏輯運算。全書架構劃分為六大核心主題：
+        <!-- Slide 2: 蹦極跳者自由落體案例 (包含修復後的公式) -->
+        <section class="slide-content space-y-6">
+            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">案例解析：蹦極跳者自由落體</h2>
+            
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <p class="text-slate-300">
+                    當運動達到平衡時，系統趨於穩態，終端速度表示為 $v_t$。
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Part 1 -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-indigo-500/30 hover:border-indigo-500/60 transition group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-indigo-400">PART ONE</span>
-                            <i class="fa-solid fa-calculator text-indigo-400 group-hover:scale-110 transition"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-100 text-base mb-1">建模與誤差分析 (Ch 1, 4)</h3>
-                        <p class="text-xs text-slate-400">物理建模、尤拉法、捨入誤差與截斷誤差、泰勒級數、最佳步長 Trade-off。</p>
+                <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700">
+                    <span class="text-sm font-semibold text-indigo-400">微分方程模型：</span>
+                    <div class="my-2 text-center text-lg">
+                        $$\frac{dv}{dt} = g - \frac{c_d}{m}v^2$$
                     </div>
-
-                    <!-- Part 2 -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-indigo-500/30 hover:border-indigo-500/60 transition group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-indigo-400">PART TWO</span>
-                            <i class="fa-solid fa-chart-line text-indigo-400 group-hover:scale-110 transition"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-100 text-base mb-1">方程求根與最佳化 (Ch 5, 6)</h3>
-                        <p class="text-xs text-slate-400">非線性方程 $f(x)=0$ 求解：包圍法 (二分法、試位法) 與開放法 (牛頓法、正割法、Brent 法)。</p>
-                    </div>
-
-                    <!-- Part 3 -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-indigo-500/30 hover:border-indigo-500/60 transition group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-indigo-400">PART THREE</span>
-                            <i class="fa-solid fa-table-cells text-indigo-400 group-hover:scale-110 transition"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-100 text-base mb-1">線性代數系統 (Ch 9, 12)</h3>
-                        <p class="text-xs text-slate-400">大型線性方程組 $Ax=b$：高斯消去法、部分軸元選擇 (Pivoting)、三對角線矩陣與 Gauss-Seidel 迭代。</p>
-                    </div>
-
-                    <!-- Part 4 -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-700 hover:border-slate-600 transition opacity-80">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-slate-400">PART FOUR</span>
-                            <i class="fa-solid fa-bezier-curve text-slate-400"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-base mb-1">曲線擬合 (Ch 14, 15, 17, 18)</h3>
-                        <p class="text-xs text-slate-400">最小平方法迴歸分析、多項式內插 (Newton, Lagrange) 與 Splines 樣條內插。</p>
-                    </div>
-
-                    <!-- Part 5 -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-700 hover:border-slate-600 transition opacity-80">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-slate-400">PART FIVE</span>
-                            <i class="fa-solid fa-square-root-variable text-slate-400"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-base mb-1">數值積分與微分 (Ch 19, 20)</h3>
-                        <p class="text-xs text-slate-400">Newton-Cotes 公式、梯形法、辛普森法 (Simpson's Rules) 與高斯求積法。</p>
-                    </div>
-
-                    <!-- Part 6 -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-700 hover:border-slate-600 transition opacity-80">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-slate-400">PART SIX</span>
-                            <i class="fa-solid fa-wave-square text-slate-400"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-base mb-1">常微分方程 (Ch 22, 23)</h3>
-                        <p class="text-xs text-slate-400">初值問題求解：龍格-庫塔法 (Runge-Kutta)、自適應步長調整與剛性系統 (Stiff Systems)。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 2: Ch 1 Mathematical Modeling -->
-        <section class="slide-content w-full hidden" data-slide="2">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Chapter 1</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">數學建模與數值方法基礎</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 text-xs rounded-full border border-indigo-500/20">Bungee Jumper Case Study</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Left Column: Concepts -->
-                    <div class="space-y-4">
-                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
-                            <h3 class="font-bold text-indigo-300 text-sm mb-2"><i class="fa-solid fa-cubes mr-2"></i>數學模型的四大要素</h3>
-                            <div class="math-block text-xs text-slate-300 space-y-1">
-                                $$\text{Dependent Var.} = f(\text{Indep. Var.}, \text{Parameters}, \text{Forcing Functions})$$
-                            </div>
-                            <ul class="text-xs text-slate-400 mt-2 space-y-1 list-disc list-inside">
-                                <li><b>應變數 (Dependent Var.)</b>：反映系統狀態 (如速度 $v$)</li>
-                                <li><b>自變數 (Independent Var.)</b>：時間或空間維度 (如 $t$)</li>
-                                <li><b>參數 (Parameters)</b>：反映系統固有物理特性 (如質量 $m$, 阻力係數 $c_d$)</li>
-                                <li><b>強制函數 (Forcing Functions)</b>：外部作用力 (如重力加速度 $g$)</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
-                            <h3 class="font-bold text-emerald-300 text-sm mb-2"><i class="fa-solid fa-bolt mr-2"></i>守恆定律與解的類型</h3>
-                            <div class="grid grid-cols-2 gap-2 text-xs">
-                                <div class="bg-slate-800 p-2.5 rounded-lg">
-                                    <span class="font-bold text-amber-400">暫態解 (Transient)</span>
-                                    <p class="text-slate-400 mt-1">系統狀態隨時間持續變化 (如跳傘初期加速階段)。</p>
-                                </div>
-                                <div class="bg-slate-800 p-2.5 rounded-lg">
-                                    <span class="font-bold text-cyan-400">穩態解 (Steady-State)</span>
-                                    <p class="text-slate-400 mt-1">輸入等於輸出，系統不隨時間改變 (達到終端速度 $v_t$)。</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Bungee Jumper Analytical vs Numerical -->
-                    <div class="bg-slate-900/80 p-5 rounded-xl border border-indigo-500/30 flex flex-col justify-between space-y-4">
-                        <h3 class="font-bold text-white text-base border-b border-slate-700 pb-2">案例解析：蹦極跳者自由落體</h3>
-
-                        <div>
-                            <span class="text-xs font-bold text-indigo-400">微分方程模型：</span>
-                            <div class="math-block text-xs text-slate-200 my-1">
-                                $$\frac{dv}{dt} = g - \frac{c_d}{m}v^2$$
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                                <span class="font-bold text-indigo-300">解析解 (Analytical Solution)</span>
-                                <p class="text-slate-400 text-[11px] my-1">利用微積分求得精確閉式解：</p>
-                                <div class="math-block text-[11px] text-slate-200">
-                                    $$v(t) = \sqrt{\frac{gm}{c_d}}\tanh\left(\sqrt{\frac{gc_d}{m}}t\right)$$
-                                </div>
-                            </div>
-
-                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                                <span class="font-bold text-emerald-300">數值解 (Euler's Method)</span>
-                                <p class="text-slate-400 text-[11px] my-1">利用有限差分近似斜率：</p>
-                                <div class="math-block text-[11px] text-slate-200">
-                                    $$v_{i+1} = v_i + \left(g - \frac{c_d}{m}v_i^2\right)\Delta t$$
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-indigo-950/40 p-3 rounded-lg border border-indigo-500/30 text-xs text-indigo-200">
-                            <i class="fa-solid fa-lightbulb text-amber-400 mr-1.5"></i>
-                            <b>數值估算核心通則：</b> $\text{New Value} = \text{Old Value} + \text{Slope} \times \text{Step Size}$
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: Ch 4 Error Analysis Fundamentals -->
-        <section class="slide-content w-full hidden" data-slide="3">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Chapter 4</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">誤差分析基礎與迭代停止準則</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-full border border-amber-500/20">Accuracy vs Precision</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Accuracy vs Precision -->
-                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700/60 space-y-3">
-                        <h3 class="font-bold text-slate-200 text-base"><i class="fa-solid fa-bullseye text-rose-400 mr-2"></i>準確度 vs 精密度</h3>
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <div class="p-3 bg-slate-800 rounded-lg border border-slate-700">
-                                <span class="font-bold text-rose-400">準確度 (Accuracy)</span>
-                                <p class="text-slate-400 mt-1 leading-relaxed">計算或測量值接近<b>真實值 (True Value)</b> 的程度。</p>
-                            </div>
-                            <div class="p-3 bg-slate-800 rounded-lg border border-slate-700">
-                                <span class="font-bold text-cyan-400">精密度 (Precision)</span>
-                                <p class="text-slate-400 mt-1 leading-relaxed">重複計算或量測時，結果之間<b>互相接近/一致</b>的程度。</p>
-                            </div>
-                        </div>
-                        <div class="text-xs text-slate-400 bg-slate-950/40 p-3 rounded-lg border border-slate-800">
-                            <b>捨入誤差 (Roundoff Error)</b> 源自於電腦以有限位元數 (Limited bits) 表示實數；<b>截斷誤差 (Truncation Error)</b> 源自以近似數學程序取代精確公式。
-                        </div>
-                    </div>
-
-                    <!-- Error Metrics Table -->
-                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700/60 space-y-3">
-                        <h3 class="font-bold text-slate-200 text-base"><i class="fa-solid fa-square-root-variable text-indigo-400 mr-2"></i>誤差量化公式與停止準則</h3>
-
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between items-center p-2 bg-slate-800/80 rounded-lg">
-                                <span class="text-slate-300 font-medium">真實絕對誤差 $E_t$</span>
-                                <span class="font-mono text-indigo-300">$E_t = \text{True Value} - \text{Approximation}$</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-slate-800/80 rounded-lg">
-                                <span class="text-slate-300 font-medium">真實相對誤差百分比 $\varepsilon_t$</span>
-                                <span class="font-mono text-indigo-300">$\varepsilon_t = \left|\frac{\text{True Error}}{\text{True Value}}\right| \times 100\%$</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-slate-800/80 rounded-lg">
-                                <span class="text-slate-300 font-medium">近似相對誤差百分比 $\varepsilon_a$</span>
-                                <span class="font-mono text-emerald-300">$\varepsilon_a = \left|\frac{x_r^{\text{new}} - x_r^{\text{old}}}{x_r^{\text{new}}}\right| \times 100\%$</span>
-                            </div>
-                        </div>
-
-                        <div class="p-3 bg-indigo-950/40 border border-indigo-500/30 rounded-lg space-y-1">
-                            <span class="text-xs font-bold text-indigo-300">迭代停止控制準則 (Stopping Criterion)：</span>
-                            <div class="math-block text-xs text-emerald-400">
-                                $$|\varepsilon_a| < \varepsilon_s, \quad \text{其中 } \varepsilon_s = (0.5 \times 10^{2-n})\%$$
-                            </div>
-                            <p class="text-[11px] text-slate-400">當此條件成立時，可確保計算結果至少達到 $n$ 位有效數字 (Significant figures) 的精準度。</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Ch 4 Truncation Error & Step Size Trade-off -->
-        <section class="slide-content w-full hidden" data-slide="4">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Chapter 4</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">截斷誤差、有限差分與最佳步長 $h_{opt}$</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-full border border-cyan-500/20">Taylor Series & Finite Differences</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Taylor Series & Finite Differences -->
-                    <div class="space-y-4">
-                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
-                            <h3 class="font-bold text-indigo-300 text-sm mb-2">泰勒級數展開 (Taylor Series)</h3>
-                            <div class="math-block text-xs text-slate-200">
-                                $$f(x_{i+1}) = f(x_i) + f'(x_i)h + \frac{f''(x_i)}{2!}h^2 + \dots + R_n$$
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 space-y-2">
-                            <h3 class="font-bold text-emerald-300 text-sm">數值微分與有限差分 (Numerical Differentiation)</h3>
-                            <div class="text-xs space-y-1.5 text-slate-300">
-                                <div class="p-2 bg-slate-800 rounded flex justify-between items-center">
-                                    <span>前向差分 (Forward)</span>
-                                    <span class="font-mono text-cyan-300">$f'(x_i) = \frac{f(x_{i+1}) - f(x_i)}{h} + O(h)$</span>
-                                </div>
-                                <div class="p-2 bg-slate-800 rounded flex justify-between items-center">
-                                    <span>後向差分 (Backward)</span>
-                                    <span class="font-mono text-cyan-300">$f'(x_i) = \frac{f(x_i) - f(x_{i-1})}{h} + O(h)$</span>
-                                </div>
-                                <div class="p-2 bg-slate-800 rounded flex justify-between items-center border border-emerald-500/30">
-                                    <span class="font-bold text-emerald-400">中心差分 (Centered)</span>
-                                    <span class="font-mono text-emerald-300">$f'(x_i) = \frac{f(x_{i+1}) - f(x_{i-1})}{2h} + O(h^2)$</span>
-                                </div>
-                            </div>
-                            <p class="text-[11px] text-slate-400 italic">中心差分具備二次截斷誤差 $O(h^2)$，準確度顯著高於前向/後向差分。</p>
-                        </div>
-                    </div>
-
-                    <!-- Total Error Trade-off Concept -->
-                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700/60 flex flex-col justify-between space-y-3">
-                        <div>
-                            <h3 class="font-bold text-amber-300 text-base mb-2"><i class="fa-solid fa-scale-balanced mr-2"></i>總數值誤差 Trade-off 權衡</h3>
-                            <p class="text-xs text-slate-300 leading-relaxed">
-                                $\text{Total Error} = \text{Truncation Error } O(h^2) + \text{Roundoff Error } O(\varepsilon/h)$
-                            </p>
-                        </div>
-
-                        <div class="p-3 bg-slate-800/80 rounded-lg text-xs space-y-2 border border-slate-700">
-                            <div class="flex items-center text-amber-400 font-semibold">
-                                <i class="fa-solid fa-arrow-down-wide-short mr-2"></i>當步長 $h$ 減小時：
-                            </div>
-                            <ul class="list-disc list-inside space-y-1 text-slate-300 text-[11px]">
-                                <li><b>截斷誤差 (Truncation)</b>：隨步長下降而降低 ($O(h)$ 或 $O(h^2)$)。</li>
-                                <li><b>捨入誤差 (Roundoff)</b>：隨步長下降而急劇增加 (相減抵消與小數累積)。</li>
-                            </ul>
-                        </div>
-
-                        <div class="p-3 bg-indigo-950/50 rounded-lg border border-indigo-500/30 text-xs text-indigo-200">
-                            <b>最佳步長公式 ($h_{opt}$)：</b> 存在極小總誤差的平衡點 $h_{opt} \approx \sqrt[3]{\frac{3\varepsilon}{M}}$。
-                            （可至 Slide 8 進行互動模擬器測試！）
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: Ch 5 Roots: Bracketing Methods -->
-        <section class="slide-content w-full hidden" data-slide="5">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Chapter 5</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">非線性方程求根：包圍法 (Bracketing Methods)</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-full border border-emerald-500/20">Always Convergent</span>
-                </div>
-
-                <div class="space-y-4">
-                    <p class="text-xs md:text-sm text-slate-300">
-                        包圍法的前提是在已知區間 $[x_l, x_u]$ 內存在根，即滿足 <b>$f(x_l) \cdot f(x_u) < 0$</b>（勘根定理）。此類方法具備 <b>100% 必定收斂</b> 的優點。
-                    </p>
-
-                    <!-- Methods Comparison Table -->
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-900/80 text-indigo-300 border-b border-slate-700">
-                                    <th class="p-3">方法名稱</th>
-                                    <th class="p-3">核心公式 / 估算方式</th>
-                                    <th class="p-3">收斂速度</th>
-                                    <th class="p-3">優點</th>
-                                    <th class="p-3">缺點與陷阱</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700/50 text-slate-300">
-                                <tr class="hover:bg-slate-800/40">
-                                    <td class="p-3 font-bold text-slate-100">遞增搜尋法<br><span class="text-[10px] text-slate-400">Incremental Search</span></td>
-                                    <td class="p-3">沿給定步長 $\Delta x$ 逐步檢查符號變化</td>
-                                    <td class="p-3 text-amber-400">視步長而定</td>
-                                    <td class="p-3">適合尋找大致範圍與多重根</td>
-                                    <td class="p-3">步長太大易遺漏根，步長太小計算成本高</td>
-                                </tr>
-                                <tr class="hover:bg-slate-800/40 bg-indigo-950/20">
-                                    <td class="p-3 font-bold text-indigo-300">二分法<br><span class="text-[10px] text-slate-400">Bisection Method</span></td>
-                                    <td class="p-3 font-mono text-emerald-300">$$x_r = \frac{x_l + x_u}{2}$$</td>
-                                    <td class="p-3 text-emerald-400">線性收斂<br>(每輪誤差減半)</td>
-                                    <td class="p-3">絕對收斂、演算法極度穩定簡單</td>
-                                    <td class="p-3">收斂速度較慢，無法處理重根切線情況</td>
-                                </tr>
-                                <tr class="hover:bg-slate-800/40">
-                                    <td class="p-3 font-bold text-slate-100">試位法<br><span class="text-[10px] text-slate-400">False Position</span></td>
-                                    <td class="p-3 font-mono text-cyan-300">$$x_r = x_u - \frac{f(x_u)(x_l - x_u)}{f(x_l) - f(x_u)}$$</td>
-                                    <td class="p-3 text-cyan-400">通常快於二分法</td>
-                                    <td class="p-3">利用線性內插 (Linear Interpolation) 估計</td>
-                                    <td class="p-3 text-rose-300">高曲率函數易產生<b>單邊固定 (One-sidedness)</b> 導致收斂極慢</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: Ch 6 Roots: Open Methods -->
-        <section class="slide-content w-full hidden" data-slide="6">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Chapter 6</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">非線性方程求根：開放法 (Open Methods)</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-rose-500/10 text-rose-400 text-xs rounded-full border border-rose-500/20">Fast but May Diverge</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Newton-Raphson -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-indigo-500/40 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-indigo-300 text-sm">牛頓-拉夫生法 (Newton-Raphson)</h3>
-                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">二次收斂</span>
+                    <div class="bg-slate-700/40 p-4 rounded-lg border border-slate-600">
+                        <h3 class="font-semibold text-cyan-400 mb-2">解析解 (Analytical Solution)</h3>
+                        <p class="text-xs text-slate-400 mb-2">利用微積分求得精確閉式解：</p>
+                        <div class="text-center my-2">
+                            $$v(t) = \sqrt{\frac{gm}{c_d}}\tanh\left(\sqrt{\frac{gc_d}{m}}t\right)$$
                         </div>
-                        <div class="math-block text-xs text-emerald-300">
-                            $$x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}$$
-                        </div>
-                        <p class="text-xs text-slate-300"><b>特性：</b> 利用切線斜率交點迭代。有效數字每輪近似加倍 ($E_{i+1} \propto E_i^2$)。</p>
-                        <p class="text-[11px] text-rose-300"><b>陷阱：</b> 若 $f'(x_i) \approx 0$ (極值點附近) 或存在反曲點，會產生振盪甚至發散。</p>
                     </div>
 
-                    <!-- Secant Method -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-700 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-cyan-300 text-sm">正割法 (Secant Method)</h3>
-                            <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">超線性收斂</span>
+                    <div class="bg-slate-700/40 p-4 rounded-lg border border-slate-600">
+                        <h3 class="font-semibold text-emerald-400 mb-2">數值解 (Euler's Method)</h3>
+                        <p class="text-xs text-slate-400 mb-2">利用有限差分近似斜率：</p>
+                        <div class="text-center my-2">
+                            $$v_{i+1} = v_i + \left(g - \frac{c_d}{m}v_i^2\right)\Delta t$$
                         </div>
-                        <div class="math-block text-xs text-cyan-200">
-                            $$x_{i+1} = x_i - \frac{f(x_i)(x_{i-1} - x_i)}{f(x_{i-1}) - f(x_i)}$$
-                        </div>
-                        <p class="text-xs text-slate-300"><b>特性：</b> 用有限差分近似導數 $f'(x)$，不需推導或計算微分解析式。</p>
                     </div>
+                </div>
 
-                    <!-- Fixed Point Iteration -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-700 space-y-2">
-                        <h3 class="font-bold text-amber-300 text-sm">簡單固定點迭代 (Fixed-Point)</h3>
-                        <div class="math-block text-xs text-amber-200">
-                            $$f(x) = 0 \implies x_{i+1} = g(x_i)$$
-                        </div>
-                        <p class="text-xs text-slate-300"><b>收斂條件：</b> 僅當在根附近滿足 <b>$|g'(x)| < 1$</b> 時才會收斂。</p>
+                <div class="bg-indigo-950/50 p-4 rounded-lg border border-indigo-800 text-sm">
+                    💡 <strong>數值估算核心通則：</strong> 
+                    $$\text{New Value} = \text{Old Value} + \text{Slope} \times \text{Step Size}$$
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: 誤差分析 -->
+        <section class="slide-content space-y-6">
+            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第四章：捨入誤差與截斷誤差</h2>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <h3 class="text-lg font-semibold text-indigo-300">相對誤差與停止準則</h3>
+                <p class="text-slate-300">近似相對誤差百分比 $\varepsilon_a$ 計算公式：</p>
+                <div class="text-center my-3">
+                    $$\varepsilon_a = \left\vert{} \frac{x_r^{\text{new}} - x_r^{\text{old}}}{x_r^{\text{new}}} \right\vert{} \times 100\%$$
+                </div>
+                <p class="text-slate-300">當滿足以下條件時停止迭代：</p>
+                <div class="text-center my-3">
+                    $$\varepsilon_a < \varepsilon_s = (0.5 \times 10^{2-n})\%$$
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: 二分法與牛頓法 -->
+        <section class="slide-content space-y-6">
+            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第五與六章：求解非線性根</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <h3 class="font-bold text-amber-400 text-lg mb-2">二分法 (Bisection)</h3>
+                    <p class="text-sm text-slate-300 mb-3">包圍法，將區間對半劃分：</p>
+                    <div class="text-center my-2">
+                        $$x_r = \frac{x_l + x_u}{2}$$
                     </div>
-
-                    <!-- Brent's Method & fzero -->
-                    <div class="p-4 rounded-xl bg-slate-900/60 border border-emerald-500/40 space-y-2">
-                        <h3 class="font-bold text-emerald-300 text-sm">布倫特法 (Brent's Method) & MATLAB `fzero`</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            結合包圍法 (二分法) 的<b>可靠穩定度</b>與開放法 (反二次內插法、正割法) 的<b>極高計算速度</b>。是 MATLAB 內建求解單變數非線性根 `fzero` 的核心底層演算法。
-                        </p>
+                </div>
+                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+                    <h3 class="font-bold text-purple-400 text-lg mb-2">牛頓-拉夫生法 (Newton-Raphson)</h3>
+                    <p class="text-sm text-slate-300 mb-3">開放法，利用切線斜率迭代：</p>
+                    <div class="text-center my-2">
+                        $$x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}$$
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 7: Ch 9 Linear Systems & Gauss Elimination -->
-        <section class="slide-content w-full hidden" data-slide="7">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Chapter 9</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">線性代數方程組：高斯消去法 (Gauss Elimination)</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 text-xs rounded-full border border-indigo-500/20">$Ax = b$ Direct Solver</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Workflow -->
-                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700/60 space-y-3">
-                        <h3 class="font-bold text-indigo-300 text-base"><i class="fa-solid fa-gears mr-2"></i>高斯消去法兩大核心階段</h3>
-                        
-                        <div class="space-y-2 text-xs">
-                            <div class="p-3 bg-slate-800 rounded-lg border-l-4 border-indigo-500">
-                                <span class="font-bold text-indigo-300">1. 向前消去 (Forward Elimination)</span>
-                                <p class="text-slate-400 mt-1">將增廣矩陣 $[A|b]$ 轉化為<b>上三角矩陣 (Upper Triangular)</b>。時間複雜度佔主要運算成本 $O(\frac{2}{3}n^3)$。</p>
-                            </div>
-                            <div class="p-3 bg-slate-800 rounded-lg border-l-4 border-emerald-500">
-                                <span class="font-bold text-emerald-300">2. 向後代換 (Back Substitution)</span>
-                                <p class="text-slate-400 mt-1">由最後一個未知數 $x_n$ 開始由下往上倒推求解所有未知數。運算成本僅 $O(n^2)$。</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-amber-950/40 p-3 rounded-lg border border-amber-500/30 text-xs text-amber-200">
-                            <i class="fa-solid fa-triangle-exclamation mr-1.5"></i><b>病態條件 (Ill-Conditioning) 與奇異性：</b><br>
-                            當矩陣行列式 $\det(A) \approx 0$ 時，代表方程組平行或接近平行，結果對捨入誤差極度敏感！
-                        </div>
-                    </div>
-
-                    <!-- Pivoting & Special Matrices -->
-                    <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700/60 space-y-3">
-                        <h3 class="font-bold text-slate-200 text-base"><i class="fa-solid fa-sliders mr-2"></i>軸元選擇 (Pivoting) 與三對角線系統</h3>
-
-                        <div class="p-3 bg-slate-800 rounded-lg text-xs space-y-1">
-                            <span class="font-bold text-cyan-300">部分軸元選擇 (Partial Pivoting)</span>
-                            <p class="text-slate-400 leading-relaxed">
-                                避免消去過程中對角軸元 $a_{kk} = 0$ (導致除以零) 或 $a_{kk}$ 過小 (累積嚴重捨入誤差)。每一輪消去前<b>對調列次</b>，選擇該行絕對值最大者作為軸元。
-                            </p>
-                        </div>
-
-                        <div class="p-3 bg-slate-800 rounded-lg text-xs space-y-1">
-                            <span class="font-bold text-emerald-300">三對角線系統 (Tridiagonal Systems)</span>
-                            <p class="text-slate-400 leading-relaxed">
-                                針對帶狀矩陣 (Banded Matrix) 使用 Thomas 演算法 (`Tridiag`)，記憶體與時間複雜度大幅降低至 <b>$O(n)$</b>！
-                            </p>
-                        </div>
-
-                        <div class="p-2.5 bg-indigo-950/40 rounded-lg border border-indigo-500/30 text-xs font-mono text-indigo-300">
-                            MATLAB 求解指令：<br>
-                            <span class="text-white">x = A \ b;</span> <span class="text-slate-400">% 內建高效左除運算子</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Interactive Simulators Slide -->
-        <section class="slide-content w-full hidden" data-slide="8">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-700/60 pb-4 gap-2">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Interactive Lab</span>
-                        <h2 class="text-2xl font-bold text-white">數值演算法動態模擬器</h2>
-                    </div>
-                    <!-- Tab Switcher -->
-                    <div class="flex bg-slate-900 p-1 rounded-lg border border-slate-700">
-                        <button id="tab-root-btn" class="px-3 py-1 text-xs font-semibold rounded-md bg-indigo-600 text-white transition">求根演算法比較</button>
-                        <button id="tab-error-btn" class="px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition">最佳步長 Trade-off</button>
-                    </div>
-                </div>
-
-                <!-- Simulator 1: Root Finding -->
-                <div id="sim-root-container" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Controls -->
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-3 text-xs">
-                            <h3 class="font-bold text-indigo-300 text-sm border-b border-slate-700 pb-2">參數設定</h3>
-                            
-                            <div>
-                                <label class="block text-slate-400 mb-1">目標函數 $f(x)$</label>
-                                <select id="root-func-select" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
-                                    <option value="x2-4">$f(x) = x^2 - 4$ (根在 x = 2)</option>
-                                    <option value="exp-x">$f(x) = e^{-x} - x$ (根在 x ≈ 0.5671)</option>
-                                    <option value="cubic">$f(x) = x^3 - 2x - 5$ (根在 x ≈ 2.0945)</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block text-slate-400 mb-1">演算法種類</label>
-                                <select id="root-algo-select" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-slate-200">
-                                    <option value="bisection">二分法 (Bisection)</option>
-                                    <option value="newton">牛頓-拉夫生法 (Newton-Raphson)</option>
-                                </select>
-                            </div>
-
-                            <div id="bisection-inputs" class="space-y-2">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label class="block text-slate-400">下限 $x_l$</label>
-                                        <input type="number" id="input-xl" value="0" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-slate-200">
-                                    </div>
-                                    <div>
-                                        <label class="block text-slate-400">上限 $x_u$</label>
-                                        <input type="number" id="input-xu" value="3" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-slate-200">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="newton-inputs" class="space-y-2 hidden">
-                                <div>
-                                    <label class="block text-slate-400">初始估計點 $x_0$</label>
-                                    <input type="number" id="input-x0" value="3" step="0.5" class="w-full bg-slate-800 border border-slate-700 rounded p-1.5 text-slate-200">
-                                </div>
-                            </div>
-
-                            <button id="run-root-sim" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 font-bold text-white rounded-lg transition">
-                                <i class="fa-solid fa-play mr-1.5"></i> 執行模擬計算
-                            </button>
-                        </div>
-
-                        <!-- Chart & Output -->
-                        <div class="md:col-span-2 bg-slate-900/80 p-4 rounded-xl border border-slate-700 flex flex-col justify-between space-y-3">
-                            <div class="h-48 w-full">
-                                <canvas id="rootChart"></canvas>
-                            </div>
-
-                            <div class="max-h-36 overflow-y-auto border border-slate-800 rounded-lg">
-                                <table class="w-full text-left text-[11px] border-collapse">
-                                    <thead class="bg-slate-800 text-slate-300 sticky top-0">
-                                        <tr>
-                                            <th class="p-1.5">Iter</th>
-                                            <th class="p-1.5">Estim. $x_r$</th>
-                                            <th class="p-1.5">$f(x_r)$</th>
-                                            <th class="p-1.5">$\varepsilon_a (\%)$</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="root-table-body" class="divide-y divide-slate-800 text-slate-300 font-mono">
-                                        <!-- Dynamic rows -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Simulator 2: Error Trade-Off -->
-                <div id="sim-error-container" class="space-y-4 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 space-y-4 text-xs">
-                            <h3 class="font-bold text-cyan-300 text-sm border-b border-slate-700 pb-2">步長調整模擬器</h3>
-                            
-                            <div>
-                                <div class="flex justify-between text-slate-300 mb-1">
-                                    <span>當前步長 $h$:</span>
-                                    <span id="h-val-display" class="font-mono text-indigo-400 font-bold">1e-3</span>
-                                </div>
-                                <input type="range" id="h-slider" min="-10" max="0" step="0.2" value="-3" class="w-full accent-indigo-500">
-                            </div>
-
-                            <div class="p-3 bg-slate-800 rounded-lg space-y-1.5 text-[11px]">
-                                <div class="flex justify-between">
-                                    <span class="text-emerald-400">截斷誤差 $O(h^2)$:</span>
-                                    <span id="trunc-err-val" class="font-mono text-slate-200">0.000</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-rose-400">捨入誤差 $O(\varepsilon/h)$:</span>
-                                    <span id="round-err-val" class="font-mono text-slate-200">0.000</span>
-                                </div>
-                                <div class="flex justify-between pt-1 border-t border-slate-700 font-bold">
-                                    <span class="text-amber-400">總誤差 (Total Error):</span>
-                                    <span id="total-err-val" class="font-mono text-white">0.000</span>
-                                </div>
-                            </div>
-
-                            <div class="text-[11px] text-slate-400 leading-relaxed bg-indigo-950/30 p-2.5 rounded border border-indigo-500/20">
-                                移動滑桿觀察 Log-Log 曲線中<b>最佳步長 $h_{opt}$</b> 的出現（截斷誤差與捨入誤差交會點）。
-                            </div>
-                        </div>
-
-                        <div class="md:col-span-2 bg-slate-900/80 p-4 rounded-xl border border-slate-700 h-64">
-                            <canvas id="errorChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Slide 9: Core Summary & Cheatsheet -->
-        <section class="slide-content w-full hidden" data-slide="9">
-            <div class="bg-slate-800/60 dark:bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 md:p-10 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700/60 pb-4">
-                    <div>
-                        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Final Summary</span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white">核心公式與 MATLAB 內建函式總結</h2>
-                    </div>
-                    <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-full border border-emerald-500/20">Exam Cheatsheet</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Key Formulas -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 space-y-3">
-                        <h3 class="font-bold text-indigo-300 text-sm border-b border-slate-700 pb-2"><i class="fa-solid fa-key mr-2"></i>核心公式精華速記</h3>
-                        <ul class="space-y-2 text-xs text-slate-300">
-                            <li class="p-2 bg-slate-800 rounded"><b>尤拉法：</b> $y_{i+1} = y_i + f(t_i, y_i)\Delta t$</li>
-                            <li class="p-2 bg-slate-800 rounded"><b>相對近似誤差：</b> $\varepsilon_a = \left|\frac{x_r^{\text{new}} - x_r^{\text{old}}}{x_r^{\text{new}}}\right| \times 100\%$</li>
-                            <li class="p-2 bg-slate-800 rounded"><b>中心差分：</b> $f'(x_i) = \frac{f(x_{i+1}) - f(x_{i-1})}{2h} + O(h^2)$</li>
-                            <li class="p-2 bg-slate-800 rounded"><b>牛頓-拉夫生法：</b> $x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}$</li>
-                        </ul>
-                    </div>
-
-                    <!-- MATLAB Cheat Sheet -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 space-y-3">
-                        <h3 class="font-bold text-emerald-300 text-sm border-b border-slate-700 pb-2"><i class="fa-solid fa-code mr-2"></i>MATLAB 內建函式對照表</h3>
-                        <div class="space-y-2 text-xs font-mono">
-                            <div class="p-2 bg-slate-800 rounded flex justify-between items-center">
-                                <span class="text-indigo-300">fzero(func, x0)</span>
-                                <span class="text-slate-400 text-[11px]">單變數非線性求根 (Brent 法)</span>
-                            </div>
-                            <div class="p-2 bg-slate-800 rounded flex justify-between items-center">
-                                <span class="text-indigo-300">roots(c)</span>
-                                <span class="text-slate-400 text-[11px]">多項式求根 (Companion Matrix)</span>
-                            </div>
-                            <div class="p-2 bg-slate-800 rounded flex justify-between items-center">
-                                <span class="text-indigo-300">A \ b</span>
-                                <span class="text-slate-400 text-[11px]">線性方程組高斯消去求解</span>
-                            </div>
-                            <div class="p-2 bg-slate-800 rounded flex justify-between items-center">
-                                <span class="text-indigo-300">det(A)</span>
-                                <span class="text-slate-400 text-[11px]">計算矩陣行列式值</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Slide 5: 高斯消去法 -->
+        <section class="slide-content space-y-6">
+            <h2 class="text-2xl font-bold text-white border-l-4 border-indigo-500 pl-3">第九章：高斯消去法 (Gauss Elimination)</h2>
+            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                <p class="text-slate-300">求解線性系統 $A \mathbf{x} = \mathbf{b}$ 的標準兩階段步驟：</p>
+                <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                    <li><strong>向前消去 (Forward Elimination)</strong>：將係數矩陣轉換為上三角矩陣。</li>
+                    <li><strong>向後代換 (Back Substitution)</strong>：從最後一個變數依序求解：
+                        $$\mathbf{x}_i = \frac{b_i - \sum_{j=i+1}^n a_{ij}x_j}{a_{ii}}$$
+                    </li>
+                </ol>
             </div>
         </section>
 
     </main>
 
-    <!-- Bottom Controls & Navigation -->
-    <footer class="sticky bottom-0 z-40 bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur border-t border-slate-700/50 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <button id="prev-btn" class="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs sm:text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
-                <i class="fa-solid fa-arrow-left mr-1.5"></i> 上一頁
-            </button>
-
-            <!-- Keyboard shortcut hint -->
-            <span class="text-[11px] text-slate-400 hidden md:inline-block">
-                提示：可用鍵盤 <kbd class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300">→</kbd> 或 <kbd class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300">Space</kbd> 切換
-            </span>
-
-            <button id="next-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
-                下一頁 <i class="fa-solid fa-arrow-right ml-1.5"></i>
-            </button>
-        </div>
+    <!-- 底部控制列 -->
+    <footer class="bg-slate-800 border-t border-slate-700 px-6 py-4 flex justify-between items-center max-w-5xl w-full mx-auto rounded-t-xl">
+        <button id="prev-btn" onclick="changeSlide(-1)" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition disabled:opacity-40">上一頁</button>
+        <button id="next-btn" onclick="changeSlide(1)" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition disabled:opacity-40">下一頁</button>
     </footer>
 
-    <!-- Table of Contents Drawer Modal -->
-    <div id="toc-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex justify-start hidden">
-        <div class="w-80 bg-slate-900 h-full p-6 border-r border-slate-800 flex flex-col justify-between overflow-y-auto">
-            <div>
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-white text-base">簡報章節目錄</h3>
-                    <button id="close-toc-btn" class="text-slate-400 hover:text-white p-1">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-                <nav class="space-y-1.5 text-xs" id="toc-list">
-                    <!-- Dynamically populated -->
-                </nav>
-            </div>
-            <div class="text-[11px] text-slate-500 pt-4 border-t border-slate-800">
-                數值方法與分析 Course Summary
-            </div>
-        </div>
-    </div>
-
-    <!-- Grid Overview Modal -->
-    <div id="grid-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 p-6 overflow-y-auto hidden">
-        <div class="max-w-6xl mx-auto space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <h3 class="font-bold text-white text-lg">投影片總覽 (Overview Grid)</h3>
-                <button id="close-grid-btn" class="text-slate-400 hover:text-white p-2">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4" id="grid-container">
-                <!-- Dynamically populated -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Application Controller Script -->
+    <!-- JavaScript 邏輯 -->
     <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-content');
+        const indicator = document.getElementById('slide-indicator');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // 全局 KaTeX 渲染函式
+        function renderAllMath() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },  // 區塊公式
+                        { left: '$', right: '$', display: false },   // 行內公式
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '[', right: ']', display: true }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // 切換投影片 logic
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            currentSlide = index;
+            indicator.textContent = `Slide ${index + 1} / ${slides.length}`;
+            
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+
+            // 每次切換頁面時重新解析 KaTeX 公式
+            renderAllMath();
+        }
+
+        function changeSlide(direction) {
+            let target = currentSlide + direction;
+            if (target >= 0 && target < slides.length) {
+                showSlide(target);
+            }
+        }
+
+        // 鍵盤左右方向鍵支援
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // 初始載入渲染
         document.addEventListener('DOMContentLoaded', () => {
-            const slides = document.querySelectorAll('.slide-content');
-            const totalSlides = slides.length;
-            let currentSlide = 1;
-
-            const slideNumSpan = document.getElementById('current-slide-num');
-            const totalNumSpan = document.getElementById('total-slide-num');
-            const progressBar = document.getElementById('progress-bar');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-
-            totalNumSpan.textContent = totalSlides;
-
-            // Titles for Navigation Drawer
-            const slideTitles = [
-                "課程架構與學習地圖",
-                "Ch 1 數學建模與數值方法基礎",
-                "Ch 4 誤差分析基礎與停止準則",
-                "Ch 4 截斷誤差與最佳步長 h_opt",
-                "Ch 5 非線性方程求根：包圍法",
-                "Ch 6 非線性方程求根：開放法",
-                "Ch 9 線性代數系統：高斯消去法",
-                "互動實驗室：演算法模擬器",
-                "核心公式與 MATLAB 函式總結"
-            ];
-
-            function renderSlide(slideIdx) {
-                slides.forEach(slide => {
-                    slide.classList.add('hidden');
-                    slide.classList.remove('slide-transition');
-                });
-
-                const activeSlide = document.querySelector(`.slide-content[data-slide="${slideIdx}"]`);
-                if (activeSlide) {
-                    activeSlide.classList.remove('hidden');
-                    activeSlide.classList.add('slide-transition');
-                }
-
-                currentSlide = slideIdx;
-                slideNumSpan.textContent = currentSlide;
-                progressBar.style.width = `${(currentSlide / totalSlides) * 100}%`;
-
-                prevBtn.disabled = currentSlide === 1;
-                nextBtn.disabled = currentSlide === totalSlides;
-
-                // Re-render KaTeX math equations
-                if (window.renderMathInElement) {
-                    renderMathInElement(activeSlide || document.body, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false}
-                        ],
-                        throwOnError: false
-                    });
-                }
-            }
-
-            // Navigation Controls
-            prevBtn.addEventListener('click', () => {
-                if (currentSlide > 1) renderSlide(currentSlide - 1);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                if (currentSlide < totalSlides) renderSlide(currentSlide + 1);
-            });
-
-            // Keyboard Navigation
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight' || e.key === ' ') {
-                    if (currentSlide < totalSlides) renderSlide(currentSlide + 1);
-                } else if (e.key === 'ArrowLeft') {
-                    if (currentSlide > 1) renderSlide(currentSlide - 1);
-                }
-            });
-
-            // TOC Drawer Modal
-            const tocBtn = document.getElementById('toc-btn');
-            const tocModal = document.getElementById('toc-modal');
-            const closeTocBtn = document.getElementById('close-toc-btn');
-            const tocList = document.getElementById('toc-list');
-
-            slideTitles.forEach((title, idx) => {
-                const item = document.createElement('button');
-                item.className = "w-full text-left p-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-2";
-                item.innerHTML = `<span class="font-mono text-xs text-indigo-400">${idx + 1}.</span> <span>${title}</span>`;
-                item.addEventListener('click', () => {
-                    renderSlide(idx + 1);
-                    tocModal.classList.add('hidden');
-                });
-                tocList.appendChild(item);
-            });
-
-            tocBtn.addEventListener('click', () => tocModal.classList.remove('hidden'));
-            closeTocBtn.addEventListener('click', () => tocModal.classList.add('hidden'));
-
-            // Grid Overview Modal
-            const gridBtn = document.getElementById('grid-btn');
-            const gridModal = document.getElementById('grid-modal');
-            const closeGridBtn = document.getElementById('close-grid-btn');
-            const gridContainer = document.getElementById('grid-container');
-
-            slideTitles.forEach((title, idx) => {
-                const card = document.createElement('div');
-                card.className = "p-4 bg-slate-900 border border-slate-800 hover:border-indigo-500/60 rounded-xl cursor-pointer transition flex flex-col justify-between space-y-2 group";
-                card.innerHTML = `
-                    <span class="text-xs font-mono font-bold text-indigo-400">SLIDE ${idx + 1}</span>
-                    <h4 class="font-semibold text-slate-200 text-xs group-hover:text-white">${title}</h4>
-                    <span class="text-[10px] text-slate-500">點擊跳轉 →</span>
-                `;
-                card.addEventListener('click', () => {
-                    renderSlide(idx + 1);
-                    gridModal.classList.add('hidden');
-                });
-                gridContainer.appendChild(card);
-            });
-
-            gridBtn.addEventListener('click', () => gridModal.classList.remove('hidden'));
-            closeGridBtn.addEventListener('click', () => gridModal.classList.add('hidden'));
-
-            // Theme Toggle
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            let isDark = true;
-
-            themeToggle.addEventListener('click', () => {
-                isDark = !isDark;
-                if (isDark) {
-                    document.documentElement.classList.add('dark');
-                    themeIcon.className = "fa-solid fa-moon";
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    themeIcon.className = "fa-solid fa-sun text-amber-500";
-                }
-            });
-
-            // Fullscreen Toggle
-            const fullscreenBtn = document.getElementById('fullscreen-btn');
-            fullscreenBtn.addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    if (document.exitFullscreen) document.exitFullscreen();
-                }
-            });
-
-            // Initialize First Slide
-            renderSlide(1);
-
-            // ==========================================
-            // SIMULATORS LOGIC & CHART.JS IMPLEMENTATION
-            // ==========================================
-
-            // Simulator Tab Switcher
-            const tabRootBtn = document.getElementById('tab-root-btn');
-            const tabErrorBtn = document.getElementById('tab-error-btn');
-            const simRootContainer = document.getElementById('sim-root-container');
-            const simErrorContainer = document.getElementById('sim-error-container');
-
-            tabRootBtn.addEventListener('click', () => {
-                tabRootBtn.className = "px-3 py-1 text-xs font-semibold rounded-md bg-indigo-600 text-white transition";
-                tabErrorBtn.className = "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
-                simRootContainer.classList.remove('hidden');
-                simErrorContainer.classList.add('hidden');
-            });
-
-            tabErrorBtn.addEventListener('click', () => {
-                tabErrorBtn.className = "px-3 py-1 text-xs font-semibold rounded-md bg-indigo-600 text-white transition";
-                tabRootBtn.className = "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
-                simErrorContainer.classList.remove('hidden');
-                simRootContainer.classList.add('hidden');
-                initErrorChart();
-            });
-
-            // Root Simulator Setup
-            const rootAlgoSelect = document.getElementById('root-algo-select');
-            const bisectionInputs = document.getElementById('bisection-inputs');
-            const newtonInputs = document.getElementById('newton-inputs');
-
-            rootAlgoSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'bisection') {
-                    bisectionInputs.classList.remove('hidden');
-                    newtonInputs.classList.add('hidden');
-                } else {
-                    bisectionInputs.classList.add('hidden');
-                    newtonInputs.classList.remove('hidden');
-                }
-            });
-
-            let rootChart = null;
-
-            function evalFunc(funcType, x) {
-                if (funcType === 'x2-4') return x * x - 4;
-                if (funcType === 'exp-x') return Math.exp(-x) - x;
-                if (funcType === 'cubic') return Math.pow(x, 3) - 2 * x - 5;
-                return 0;
-            }
-
-            function evalDeriv(funcType, x) {
-                if (funcType === 'x2-4') return 2 * x;
-                if (funcType === 'exp-x') return -Math.exp(-x) - 1;
-                if (funcType === 'cubic') return 3 * x * x - 2;
-                return 1;
-            }
-
-            function runRootSimulation() {
-                const funcType = document.getElementById('root-func-select').value;
-                const algo = rootAlgoSelect.value;
-                const tableBody = document.getElementById('root-table-body');
-                tableBody.innerHTML = '';
-
-                let steps = [];
-                let xOld = null;
-
-                if (algo === 'bisection') {
-                    let xl = parseFloat(document.getElementById('input-xl').value);
-                    let xu = parseFloat(document.getElementById('input-xu').value);
-
-                    for (let iter = 1; iter <= 10; iter++) {
-                        let xr = (xl + xu) / 2;
-                        let fxr = evalFunc(funcType, xr);
-                        let ea = (xOld !== null) ? Math.abs((xr - xOld) / xr) * 100 : 100;
-
-                        steps.push({iter, xr, fxr, ea});
-
-                        if (evalFunc(funcType, xl) * fxr < 0) {
-                            xu = xr;
-                        } else {
-                            xl = xr;
-                        }
-                        xOld = xr;
-                        if (Math.abs(fxr) < 1e-5) break;
-                    }
-                } else {
-                    let x0 = parseFloat(document.getElementById('input-x0').value);
-                    let xCurr = x0;
-
-                    for (let iter = 1; iter <= 10; iter++) {
-                        let fx = evalFunc(funcType, xCurr);
-                        let dfx = evalDeriv(funcType, xCurr);
-                        if (Math.abs(dfx) < 1e-7) break;
-
-                        let xNext = xCurr - fx / dfx;
-                        let ea = Math.abs((xNext - xCurr) / xNext) * 100;
-
-                        steps.push({iter, xr: xNext, fxr: evalFunc(funcType, xNext), ea});
-                        xCurr = xNext;
-                        if (Math.abs(evalFunc(funcType, xNext)) < 1e-5) break;
-                    }
-                }
-
-                // Render Table
-                steps.forEach(s => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="p-1.5">${s.iter}</td>
-                        <td class="p-1.5 text-emerald-400">${s.xr.toFixed(5)}</td>
-                        <td class="p-1.5">${s.fxr.toFixed(5)}</td>
-                        <td class="p-1.5 text-amber-400">${s.ea.toFixed(2)}%</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-
-                // Render Chart
-                const ctx = document.getElementById('rootChart').getContext('2d');
-                const xPlot = [];
-                const yPlot = [];
-                const minX = -1, maxX = 4;
-                for (let x = minX; x <= maxX; x += 0.1) {
-                    xPlot.push(x.toFixed(1));
-                    yPlot.push(evalFunc(funcType, x));
-                }
-
-                if (rootChart) rootChart.destroy();
-                rootChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: xPlot,
-                        datasets: [{
-                            label: 'f(x)',
-                            data: yPlot,
-                            borderColor: '#3b82f6',
-                            borderWidth: 2,
-                            pointRadius: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: { grid: { color: 'rgba(255,255,255,0.1)' } },
-                            y: { grid: { color: 'rgba(255,255,255,0.1)' } }
-                        },
-                        plugins: { legend: { labels: { color: '#cbd5e1' } } }
-                    }
-                });
-            }
-
-            document.getElementById('run-root-sim').addEventListener('click', runRootSimulation);
-            runRootSimulation();
-
-            // Error Trade-off Chart Logic
-            let errorChart = null;
-            function initErrorChart() {
-                if (errorChart) return;
-                const ctx = document.getElementById('errorChart').getContext('2d');
-
-                const hVals = [];
-                const truncErrs = [];
-                const roundErrs = [];
-                const totalErrs = [];
-
-                for (let exp = -10; exp <= 0; exp += 0.5) {
-                    let h = Math.pow(10, exp);
-                    let trunc = 10 * h * h;
-                    let round = 1e-12 / h;
-                    let total = trunc + round;
-
-                    hVals.push(`1e${exp}`);
-                    truncErrs.push(trunc);
-                    roundErrs.push(round);
-                    totalErrs.push(total);
-                }
-
-                errorChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: hVals,
-                        datasets: [
-                            { label: '截斷誤差 O(h²)', data: truncErrs, borderColor: '#10b981', borderWidth: 2, pointRadius: 0 },
-                            { label: '捨入誤差 O(ε/h)', data: roundErrs, borderColor: '#f43f5e', borderWidth: 2, pointRadius: 0 },
-                            { label: '總數值誤差', data: totalErrs, borderColor: '#f59e0b', borderWidth: 3, pointRadius: 0 }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { type: 'logarithmic', grid: { color: 'rgba(255,255,255,0.1)' } },
-                            x: { grid: { color: 'rgba(255,255,255,0.1)' } }
-                        },
-                        plugins: { legend: { labels: { color: '#cbd5e1' } } }
-                    }
-                });
-
-                const slider = document.getElementById('h-slider');
-                slider.addEventListener('input', (e) => {
-                    let exp = parseFloat(e.target.value);
-                    let h = Math.pow(10, exp);
-                    let trunc = 10 * h * h;
-                    let round = 1e-12 / h;
-                    let total = trunc + round;
-
-                    document.getElementById('h-val-display').textContent = h.toExponential(2);
-                    document.getElementById('trunc-err-val').textContent = trunc.toExponential(3);
-                    document.getElementById('round-err-val').textContent = round.toExponential(3);
-                    document.getElementById('total-err-val').textContent = total.toExponential(3);
-                });
-            }
+            showSlide(0);
         });
     </script>
 </body>
 </html>
-```
