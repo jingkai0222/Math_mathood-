@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>數值方法與分析 - 精緻學術簡報與習題網頁</title>
+    <title>數值方法與分析 - 全方位互動學術簡報</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,7 +34,7 @@
         .slide-page { display: none; }
         .slide-page.active { display: block; }
         
-        /* 解決公式超出框框的核心 CSS 修正 */
+        /* 防爆版面：公式與容器橫向溢出保護 */
         .katex-display { 
             margin: 0.5em 0 !important; 
             overflow-x: auto !important;
@@ -47,7 +47,6 @@
             max-width: 100%;
         }
 
-        /* 確保字串強制換行防破版 */
         .card-box {
             word-wrap: break-word;
             overflow-wrap: break-word;
@@ -79,7 +78,7 @@
     <!-- 主內容區 -->
     <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 md:p-8">
         
-        <!-- SLIDE 1: 課程簡介與核心觀念 -->
+        <!-- SLIDE 1: 課程簡介與建模概論 -->
         <section class="slide-page active space-y-6">
             <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 card-box">
                 <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
@@ -146,16 +145,28 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- 工程應用與適用狀況 -->
+                <div class="p-4 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-2">
+                    <h4 class="font-bold text-indigo-900 text-xs sm:text-sm flex items-center gap-1.5">
+                        <span>🚀 數值建模的工程應用與適用狀況</span>
+                    </h4>
+                    <ul class="text-xs text-indigo-950 list-disc list-inside space-y-1">
+                        <li><strong>極限運動與航太</strong>：蹦極繩索強度拉力計算、動態空氣阻力落體速度模擬。</li>
+                        <li><strong>電機與電子工程</strong>：RC/RL 電路開關瞬間的暫態電流與電壓充放電反應。</li>
+                        <li><strong>化學工程</strong>：模擬反應器中化學物質濃度隨時間變化的動態消耗與生成。</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
-        <!-- SLIDE 2: 蹦極跳者自由落體案例 -->
+        <!-- SLIDE 2: 蹦極跳者案例與尤拉法 -->
         <section class="slide-page space-y-6">
             <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 card-box">
                 <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Case Study • Chapter 1</span>
-                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">案例解析：蹦極跳者自由落體</h2>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">案例解析：蹦極跳者自由落體與尤拉法</h2>
                     </div>
                     <span class="bg-emerald-50 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium shrink-0">物理建模</span>
                 </div>
@@ -165,7 +176,7 @@
                     <div class="overflow-x-auto my-1 text-center">
                         $$\frac{dv}{dt} = g - \frac{c_d}{m}v^2$$
                     </div>
-                    <p class="text-xs text-slate-600"><strong>公式運作原理：</strong> 根據牛頓第二定律 $F=ma$，合力包含向下的重力 $mg$ 與向上的空氣阻力 $c_d v^2$。兩邊同除以質量 $m$ 即得出加速度（速度隨時間的變化率），描述落體速度受阻力遞減的動態過程。</p>
+                    <p class="text-xs text-slate-600"><strong>公式運作原理：</strong> 根據牛頓第二定律 $F=ma$，合力包含向下的重力 $mg$ 與向上的空氣阻力 $c_d v^2$。兩邊同除以質量 $m$ 即得出加速度（速度隨時間的變化率 $\frac{dv}{dt}$）。</p>
                 </div>
 
                 <!-- 雙欄對照卡片 -->
@@ -204,7 +215,7 @@
             </div>
         </section>
 
-        <!-- SLIDE 3: 誤差定義與 Trade-Off 模擬器 -->
+        <!-- SLIDE 3: 誤差分析與 Trade-Off 模擬器 -->
         <section class="slide-page space-y-6">
             <div class="bg-white p-5 sm:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 card-box">
                 <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
@@ -238,6 +249,12 @@
                         </div>
                         <p class="text-[11px] text-slate-500">當 $|\varepsilon_a| < \varepsilon_s$ 時停止，保證解具備 $n$ 位有效數字。</p>
                     </div>
+                </div>
+
+                <!-- 泰勒展開與有限差分應用 -->
+                <div class="p-3.5 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-1">
+                    <h4 class="font-bold text-indigo-900 text-xs sm:text-sm">🎯 泰勒展開式與有限差分的應用時機</h4>
+                    <p class="text-xs text-indigo-950"><strong>自駕車與機器人定位</strong>：由 GPS 離散座標數據求瞬間加速度；<strong>數位影像處理</strong>：利用像素梯度（有限差分）進行邊緣輪廓檢測；<strong>嵌入式晶片</strong>：用低階泰勒展開式快速計算三角函數。</p>
                 </div>
 
                 <!-- 互動式 Trade-off 模擬器 -->
@@ -315,8 +332,15 @@
                     </div>
                 </div>
 
-                <div class="p-3.5 bg-slate-100 rounded-xl text-xs text-slate-600">
-                    💡 <strong>遞增搜尋法 (Incremental Search)：</strong> 沿指定區間以微小步長逐步檢查 $f(x)$ 符號變化，自動找出包圍根的初始區間。
+                <!-- 包圍法工程應用 -->
+                <div class="p-4 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-2">
+                    <h4 class="font-bold text-indigo-900 text-xs sm:text-sm">🛡️ 包圍法的工程應用與適用狀況</h4>
+                    <p class="text-xs text-indigo-950"><strong>適用狀況</strong>：當要求<strong>絕對穩定、100% 不能發散</strong>，或函數圖形不平滑/含有不可微點時。</p>
+                    <ul class="text-xs text-indigo-950 list-disc list-inside space-y-0.5">
+                        <li><strong>結構安全界限</strong>：計算蹦極跳者在限制 4 秒內速度不超過 36 m/s 條件下的<strong>最大許可體重 $m$</strong>。</li>
+                        <li><strong>流體管道設計</strong>：求解 Colebrook 隱式方程式以獲得管道摩擦因子 (Friction Factor)。</li>
+                        <li><strong>熱力學狀態方程</strong>：求解凡得瓦 (Van der Waals) 方程計算真實氣體體積。</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -357,6 +381,17 @@
                         </div>
                         <p class="text-[11px] text-slate-500"><strong>原理：</strong> 利用前兩點的割線斜率替代難解的微分導數 $f'(x)$。</p>
                     </div>
+                </div>
+
+                <!-- 開放法工程應用 -->
+                <div class="p-4 bg-purple-50/60 rounded-xl border border-purple-200 space-y-2">
+                    <h4 class="font-bold text-purple-900 text-xs sm:text-sm">⚡ 開放法的工程應用與適用狀況</h4>
+                    <p class="text-xs text-purple-950"><strong>適用狀況</strong>：當要求<strong>極高計算速度</strong>，且已經具備良好的初始猜測值時。</p>
+                    <ul class="text-xs text-purple-950 list-disc list-inside space-y-0.5">
+                        <li><strong>電子電路 SPICE 模擬</strong>：晶體管非線性伏安特性 (I-V Curve) 方程的高速求解。</li>
+                        <li><strong>天體物理與軌道力學</strong>：求解克卜勒方程 (Kepler's Eq.) 推算衛星即時軌道位置。</li>
+                        <li><strong>機器人逆向運動學</strong>：由手爪末端座標即時反推手臂各關節旋轉角度。</li>
+                    </ul>
                 </div>
 
                 <!-- Brent's Method 與 fzero -->
@@ -417,6 +452,17 @@
                         <p class="text-xs text-indigo-800">向前消去需約 $\frac{2n^3}{3}$ 次浮點運算，向後代換需 $n^2$ 次。當規模 $n$ 很大時向前消去佔據大部分計算資源。</p>
                     </div>
                 </div>
+
+                <!-- 高斯消去法工程應用 -->
+                <div class="p-4 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-2">
+                    <h4 class="font-bold text-indigo-900 text-xs sm:text-sm">🏢 高斯消去法的工程應用與適用狀況</h4>
+                    <p class="text-xs text-indigo-950"><strong>適用狀況</strong>：處理多變數相互耦合的聯立方程組 ($A\mathbf{x} = \mathbf{b}$)。</p>
+                    <ul class="text-xs text-indigo-950 list-disc list-inside space-y-0.5">
+                        <li><strong>土木結構工程</strong>：大型橋樑與桁架 (Truss Structure) 各節點受力與位移聯立方程求解。</li>
+                        <li><strong>電機網路分析</strong>：多迴路基爾霍夫定律 (KVL/KCL) 節點電壓求解。</li>
+                        <li><strong>熱傳導分析</strong>：棒材一維熱傳導差分化後形成的三對角線矩陣 (Tridiagonal Systems) 求解。</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -448,7 +494,7 @@
                             <div class="p-3 bg-blue-50/60 rounded-lg border border-blue-200 space-y-2 mt-2">
                                 <p class="font-bold text-blue-900">【演算步驟解析】</p>
                                 <p>1. <strong>$t=0 \to 2\,\text{s}$ 步驟：</strong><br>
-                                当年前斜率 $\left.\frac{dv}{dt}\right|_{t=0} = 9.81 - \frac{0.25}{68.1}(0)^2 = 9.81\,\text{m/s}^2$<br>
+                                當前斜率 $\left.\frac{dv}{dt}\right|_{t=0} = 9.81 - \frac{0.25}{68.1}(0)^2 = 9.81\,\text{m/s}^2$<br>
                                 $v(2) = 0 + 9.81 \times 2 = \mathbf{19.62\,\text{m/s}}$</p>
 
                                 <p>2. <strong>$t=2 \to 4\,\text{s}$ 步驟：</strong><br>
