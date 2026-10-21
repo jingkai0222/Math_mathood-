@@ -149,9 +149,9 @@
                         <span>🚀 數值建模的工程應用與適用狀況</span>
                     </h4>
                     <ul class="text-xs text-indigo-950 list-disc list-inside space-y-1">
-                        <li><strong>極限運動與航太</strong>：蹦極繩索強度拉力計算、動態空氣阻力落體速度模擬[span_0](start_span)[span_0](end_span)。</li>
-                        <li><strong>電機與電子工程</strong>：RC/RL 電路開關瞬間的暫態電流與電壓充放電反應[span_1](start_span)[span_1](end_span)。</li>
-                        <li><strong>化學工程</strong>：模擬反應器中化學物質濃度隨時間變化的動態消耗與生成[span_2](start_span)[span_2](end_span)。</li>
+                        <li><strong>極限運動與航太</strong>：蹦極繩索強度拉力計算、動態空氣阻力落體速度模擬。</li>
+                        <li><strong>電機與電子工程</strong>：RC/RL 電路開關瞬間的暫態電流與電壓充放電反應。</li>
+                        <li><strong>化學工程</strong>：模擬反應器中化學物質濃度隨時間變化的動態消耗與生成。</li>
                     </ul>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                     <div class="overflow-x-auto my-1 text-center">
                         $$\frac{dv}{dt} = g - \frac{c_d}{m}v^2$$
                     </div>
-                    <p class="text-xs text-slate-600"><strong>公式運作原理：</strong> 根據牛頓第二定律 $F=ma$，合力包含向下的重力 $mg$ 與向上的空氣阻力 $c_d v^2$[span_3](start_span)[span_3](end_span)。兩邊同除以質量 $m$ 即得出加速度（速度隨時間的變化率 $\frac{dv}{dt}$）[span_4](start_span)[span_4](end_span)。</p>
+                    <p class="text-xs text-slate-600"><strong>公式運作原理：</strong> 根據牛頓第二定律 $F=ma$，合力包含向下的重力 $mg$ 與向上的空氣阻力 $c_d v^2$。兩邊同除以質量 $m$ 即得出加速度（速度隨時間的變化率 $\frac{dv}{dt}$）。</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -185,7 +185,7 @@
                         <div class="overflow-x-auto bg-white p-2.5 rounded-lg border border-blue-200 text-center shadow-sm">
                             $$v(t) = \sqrt{\frac{gm}{c_d}}\tanh\left(\sqrt{\frac{gc_d}{m}}t\right)$$
                         </div>
-                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 利用變數分離法精確積分[span_5](start_span)[span_5](end_span)。當 $t \to \infty$ 時，$\tanh(\infty) \to 1$，速度收斂至終端速度 $v_t = \sqrt{\frac{gm}{c_d}}$ (穩態解)[span_6](start_span)[span_6](end_span)。</p>
+                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 利用變數分離法精確積分。當 $t \to \infty$ 時，$\tanh(\infty) \to 1$，速度收斂至終端速度 $v_t = \sqrt{\frac{gm}{c_d}}$ (穩態解)。</p>
                     </div>
 
                     <div class="p-4 sm:p-5 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-3">
@@ -196,7 +196,7 @@
                         <div class="overflow-x-auto bg-white p-2.5 rounded-lg border border-emerald-200 text-center shadow-sm">
                             $$v_{i+1} = v_i + \left(g - \frac{c_d}{m}v_i^2\right)\Delta t$$
                         </div>
-                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 將連續微分項以割線斜率 $\frac{\Delta v}{\Delta t}$ 近似[span_7](start_span)[span_7](end_span)，利用當前斜率與時間步長 $\Delta t$ 逐步遞推下一時間點的速度估值[span_8](start_span)[span_8](end_span)。</p>
+                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 將連續微分項以割線斜率 $\frac{\Delta v}{\Delta t}$ 近似，利用當前斜率與時間步長 $\Delta t$ 逐步遞推下一時間點的速度估值。</p>
                     </div>
                 </div>
 
@@ -226,27 +226,27 @@
                         <div class="overflow-x-auto bg-white p-2 rounded border border-slate-200 text-center">
                             $$\varepsilon_t = \left|\frac{\text{True Value} - \text{Approx}}{\text{True Value}}\right| \times 100\%$$
                         </div>
-                        <p class="text-[11px] text-slate-500">將絕對誤差除以真實值正規化，客觀呈現量級關係[span_9](start_span)[span_9](end_span)。</p>
+                        <p class="text-[11px] text-slate-500">將絕對誤差除以真實值正規化，客觀呈現量級關係。</p>
                     </div>
                     <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
                         <div class="text-xs font-bold text-slate-700">近似相對誤差 $\varepsilon_a$</div>
                         <div class="overflow-x-auto bg-white p-2 rounded border border-slate-200 text-center">
                             $$\varepsilon_a = \left|\frac{x_r^{\text{new}} - x_r^{\text{old}}}{x_r^{\text{new}}}\right| \times 100\%$$
                         </div>
-                        <p class="text-[11px] text-slate-500">未知真實解時，以前後兩次迭代估算值的相對變化衡量[span_10](start_span)[span_10](end_span)。</p>
+                        <p class="text-[11px] text-slate-500">未知真實解時，以前後兩次迭代估算值的相對變化衡量。</p>
                     </div>
                     <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
                         <div class="text-xs font-bold text-slate-700">Scarborough 停止準則 $\varepsilon_s$</div>
                         <div class="overflow-x-auto bg-white p-2 rounded border border-slate-200 text-center">
                             $$\varepsilon_s = (0.5 \times 10^{2-n})\%$$
                         </div>
-                        <p class="text-[11px] text-slate-500">當 $|\varepsilon_a| < \varepsilon_s$ 時停止，保證解具備 $n$ 位有效數字[span_11](start_span)[span_11](end_span)。</p>
+                        <p class="text-[11px] text-slate-500">當 $|\varepsilon_a| < \varepsilon_s$ 時停止，保證解具備 $n$ 位有效數字。</p>
                     </div>
                 </div>
 
                 <div class="p-3.5 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-1">
                     <h4 class="font-bold text-indigo-900 text-xs sm:text-sm">🎯 泰勒展開式與有限差分的應用時機</h4>
-                    <p class="text-xs text-indigo-950"><strong>自駕車與機器人定位</strong>：由 GPS 離散座標數據求瞬間加速度；<strong>數位影像處理</strong>：利用像素梯度（有限差分）進行邊緣輪廓檢測；<strong>嵌入式晶片</strong>：用低階泰勒展開式快速計算三角函數[span_12](start_span)[span_12](end_span)。</p>
+                    <p class="text-xs text-indigo-950"><strong>自駕車與機器人定位</strong>：由 GPS 離散座標數據求瞬間加速度；<strong>數位影像處理</strong>：利用像素梯度（有限差分）進行邊緣輪廓檢測；<strong>嵌入式晶片</strong>：用低階泰勒展開式快速計算三角函數。</p>
                 </div>
 
                 <div class="p-4 sm:p-5 bg-blue-50/50 rounded-xl border border-blue-200 space-y-4">
@@ -268,17 +268,17 @@
                         <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
                             <div class="text-xs text-slate-500">截斷誤差 (Truncation)</div>
                             <div class="text-sm font-bold text-indigo-600 mt-0.5" id="err-trunc">0.000500</div>
-                            <div class="text-[10px] text-slate-400">隨 $h$ 減小而降低 ($O(h)$)[span_13](start_span)[span_13](end_span)</div>
+                            <div class="text-[10px] text-slate-400">隨 $h$ 減小而降低 ($O(h)$)</div>
                         </div>
                         <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
                             <div class="text-xs text-slate-500">捨入誤差 (Roundoff)</div>
                             <div class="text-sm font-bold text-amber-600 mt-0.5" id="err-round">0.000001</div>
-                            <div class="text-[10px] text-slate-400">隨 $h$ 減小因有限位元劇增[span_14](start_span)[span_14](end_span)</div>
+                            <div class="text-[10px] text-slate-400">隨 $h$ 減小因有限位元劇增</div>
                         </div>
                         <div class="p-3 bg-blue-600 text-white rounded-lg shadow-sm">
                             <div class="text-xs opacity-80">總數值誤差 (Total Error)</div>
                             <div class="text-sm font-bold mt-0.5" id="err-total">0.000501</div>
-                            <div class="text-[10px] opacity-80">兩者權衡求極小值[span_15](start_span)[span_15](end_span)</div>
+                            <div class="text-[10px] opacity-80">兩者權衡求極小值</div>
                         </div>
                     </div>
                 </div>
@@ -296,7 +296,7 @@
                     <span class="bg-emerald-50 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium shrink-0">絕對收斂</span>
                 </div>
 
-                <p class="text-xs sm:text-sm text-slate-600"><strong>勘根原理：</strong> 若連續函數 $f(x)$ 在區間 $[x_l, x_u]$ 端點滿足 $f(x_l) \cdot f(x_u) < 0$，則該區間內必包含至少一個實根[span_16](start_span)[span_16](end_span)。</p>
+                <p class="text-xs sm:text-sm text-slate-600"><strong>勘根原理：</strong> 若連續函數 $f(x)$ 在區間 $[x_l, x_u]$ 端點滿足 $f(x_l) \cdot f(x_u) < 0$，則該區間內必包含至少一個實根。</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div class="p-4 sm:p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
@@ -307,7 +307,7 @@
                         <div class="overflow-x-auto bg-white p-2.5 rounded-lg border border-slate-200 text-center shadow-sm">
                             $$x_r = \frac{x_l + x_u}{2}$$
                         </div>
-                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 每次強制取中點將區間減半，並根據 $f(x_l)\cdot f(x_r)$ 符號縮小範圍[span_17](start_span)[span_17](end_span)。具備 100% 穩定絕對收斂性，但速度較慢[span_18](start_span)[span_18](end_span)。</p>
+                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 每次強制取中點將區間減半，並根據 $f(x_l)\cdot f(x_r)$ 符號縮小範圍。具備 100% 穩定絕對收斂性，但速度較慢。</p>
                     </div>
 
                     <div class="p-4 sm:p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
@@ -318,15 +318,15 @@
                         <div class="overflow-x-auto bg-white p-2.5 rounded-lg border border-slate-200 text-center shadow-sm">
                             $$x_r = x_u - \frac{f(x_u)(x_l - x_u)}{f(x_l) - f(x_u)}$$
                         </div>
-                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 以兩端點連線與 x 軸交點作為估計值[span_19](start_span)[span_19](end_span)。速度通常比二分法快，但若函數曲率大易產生單邊性 (One-sidedness)[span_20](start_span)[span_20](end_span)。</p>
+                        <p class="text-xs text-slate-600"><strong>運作原理：</strong> 以兩端點連線與 x 軸交點作為估計值。速度通常比二分法快，但若函數曲率大易產生單邊性 (One-sidedness)。</p>
                     </div>
                 </div>
 
                 <div class="p-4 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-2">
                     <h4 class="font-bold text-indigo-900 text-xs sm:text-sm">🛡️ 包圍法的工程應用與適用狀況</h4>
-                    <p class="text-xs text-indigo-950"><strong>適用狀況</strong>：當要求<strong>絕對穩定、100% 不能發散</strong>，或函數圖形不平滑/含有不可微點時[span_21](start_span)[span_21](end_span)。</p>
+                    <p class="text-xs text-indigo-950"><strong>適用狀況</strong>：當要求<strong>絕對穩定、100% 不能發散</strong>，或函數圖形不平滑/含有不可微點時。</p>
                     <ul class="text-xs text-indigo-950 list-disc list-inside space-y-0.5">
-                        <li><strong>結構安全界限</strong>：計算蹦極跳者在限制 4 秒內速度不超過 36 m/s 條件下的<strong>最大許可體重 $m$</strong>[span_22](start_span)[span_22](end_span)。</li>
+                        <li><strong>結構安全界限</strong>：計算蹦極跳者在限制 $4\text{ 秒}$ 內速度不超過 $36\text{ m/s}$ 條件下的<strong>最大許可體重 $m$</strong>。</li>
                         <li><strong>流體管道設計</strong>：求解 Colebrook 隱式方程式以獲得管道摩擦因子 (Friction Factor)。</li>
                         <li><strong>熱力學狀態方程</strong>：求解凡得瓦 (Van der Waals) 方程計算真實氣體體積。</li>
                     </ul>
@@ -351,7 +351,7 @@
                         <div class="overflow-x-auto bg-white p-2 rounded border border-slate-200 text-center">
                             $$x_{i+1} = g(x_i)$$
                         </div>
-                        <p class="text-[11px] text-slate-500"><strong>原理：</strong> 將 $f(x)=0$ 改寫為 $x=g(x)$[span_23](start_span)[span_23](end_span)。當在根附近滿足 $|g'(x)| < 1$ 時收斂[span_24](start_span)[span_24](end_span)。</p>
+                        <p class="text-[11px] text-slate-500"><strong>原理：</strong> 將 $f(x)=0$ 改寫為 $x=g(x)$。當在根附近滿足 $|g'(x)| < 1$ 時收斂。</p>
                     </div>
 
                     <div class="p-3.5 bg-purple-50/60 border border-purple-200 rounded-xl space-y-1.5">
@@ -359,7 +359,7 @@
                         <div class="overflow-x-auto bg-white p-2 rounded border border-purple-200 text-center">
                             $$x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}$$
                         </div>
-                        <p class="text-[11px] text-purple-800"><strong>原理：</strong> 利用切線與 x 軸交點迭代[span_25](start_span)[span_25](end_span)，具備二次收斂 ($E_{i+1} \propto E_i^2$)，速度極快[span_26](start_span)[span_26](end_span)。</p>
+                        <p class="text-[11px] text-purple-800"><strong>原理：</strong> 利用切線與 x 軸交點迭代，具備二次收斂 ($E_{i+1} \propto E_i^2$)，速度極快。</p>
                     </div>
 
                     <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
@@ -367,13 +367,13 @@
                         <div class="overflow-x-auto bg-white p-2 rounded border border-slate-200 text-center">
                             $$f'(x_i) \approx \frac{f(x_{i-1}) - f(x_i)}{x_{i-1} - x_i}$$
                         </div>
-                        <p class="text-[11px] text-slate-500"><strong>原理：</strong> 利用前兩點的割線斜率替代難解的微分導數 $f'(x)$[span_27](start_span)[span_27](end_span)。</p>
+                        <p class="text-[11px] text-slate-500"><strong>原理：</strong> 利用前兩點的割線斜率替代難解的微分導數 $f'(x)$。</p>
                     </div>
                 </div>
 
                 <div class="p-4 bg-purple-50/60 rounded-xl border border-purple-200 space-y-2">
                     <h4 class="font-bold text-purple-900 text-xs sm:text-sm">⚡ 開放法的工程應用與適用狀況</h4>
-                    <p class="text-xs text-purple-950"><strong>適用狀況</strong>：當要求<strong>極高計算速度</strong>，且已經具備良好的初始猜測值時[span_28](start_span)[span_28](end_span)。</p>
+                    <p class="text-xs text-purple-950"><strong>適用狀況</strong>：當要求<strong>極高計算速度</strong>，且已經具備良好的初始猜測值時。</p>
                     <ul class="text-xs text-purple-950 list-disc list-inside space-y-0.5">
                         <li><strong>電子電路 SPICE 模擬</strong>：晶體管非線性伏安特性 (I-V Curve) 方程的高速求解。</li>
                         <li><strong>天體物理與軌道力學</strong>：求解克卜勒方程 (Kepler's Eq.) 推算衛星即時軌道位置。</li>
@@ -384,7 +384,7 @@
                 <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                         <h4 class="font-bold text-blue-900 text-sm">布倫特法 (Brent's Method) & MATLAB fzero</h4>
-                        <p class="text-xs text-blue-700 mt-0.5">結合包圍法的穩定度與反二次內插法/正割法的高速優勢[span_29](start_span)[span_29](end_span)，為 MATLAB <code class="bg-blue-100 px-1 py-0.5 rounded font-mono">fzero</code> 之核心算法[span_30](start_span)[span_30](end_span)。</p>
+                        <p class="text-xs text-blue-700 mt-0.5">結合包圍法的穩定度與反二次內插法/正割法的高速優勢，為 MATLAB <code class="bg-blue-100 px-1 py-0.5 rounded font-mono">fzero</code> 之核心算法。</p>
                     </div>
                     <span class="text-xs bg-blue-600 text-white font-mono px-2.5 py-1 rounded shadow-sm shrink-0 text-center">fzero(fun, x0)</span>
                 </div>
@@ -408,7 +408,7 @@
                             <span class="w-5 h-5 bg-blue-600 text-white text-xs font-bold rounded-full flex items-center justify-center">1</span>
                             <h3 class="font-bold text-slate-800 text-sm sm:text-base">向前消去 (Forward Elimination)</h3>
                         </div>
-                        <p class="text-xs text-slate-600">將增廣矩陣 $[A|b]$ 透過列運算消去轉為上三角矩陣 (Upper Triangular Matrix)[span_31](start_span)[span_31](end_span)：</p>
+                        <p class="text-xs text-slate-600">將增廣矩陣 $[A|b]$ 透過列運算消去轉為上三角矩陣 (Upper Triangular Matrix)：</p>
                         <div class="overflow-x-auto bg-white p-2.5 rounded-lg border border-slate-200 text-center font-mono text-xs">
                             $$\begin{bmatrix} a_{11} & a_{12} & a_{13} \\ 0 & a'_{22} & a'_{23} \\ 0 & 0 & a''_{33} \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} b_1 \\ b'_2 \\ b''_3 \end{bmatrix}$$
                         </div>
@@ -419,7 +419,7 @@
                             <span class="w-5 h-5 bg-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center">2</span>
                             <h3 class="font-bold text-slate-800 text-sm sm:text-base">向後代換 (Back Substitution)</h3>
                         </div>
-                        <p class="text-xs text-slate-600">從最後一個未知數 $x_n$ 逆向代回求解至 $x_1$[span_32](start_span)[span_32](end_span)：</p>
+                        <p class="text-xs text-slate-600">從最後一個未知數 $x_n$ 逆向代回求解至 $x_1$：</p>
                         <div class="overflow-x-auto bg-white p-2.5 rounded-lg border border-slate-200 text-center">
                             $$x_i = \frac{b_i - \sum_{j=i+1}^n a_{ij}x_j}{a_{ii}}$$
                         </div>
@@ -429,21 +429,21 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                     <div class="p-3.5 bg-amber-50/60 border border-amber-200 rounded-xl space-y-1">
                         <h4 class="font-bold text-amber-900 text-sm">部分軸元選擇 (Partial Pivoting)</h4>
-                        <p class="text-xs text-amber-800">消去前尋找當前欄中絕對值最大者進行列對換，防止除以零並降低相減銷去 (Subtractive Cancellation) 累積誤差[span_33](start_span)[span_33](end_span)。</p>
+                        <p class="text-xs text-amber-800">消去前尋找當前欄中絕對值最大者進行列對換，防止除以零並降低相減銷去 (Subtractive Cancellation) 累積誤差。</p>
                     </div>
                     <div class="p-3.5 bg-indigo-50/60 border border-indigo-200 rounded-xl space-y-1">
                         <h4 class="font-bold text-indigo-900 text-sm">計算複雜度 (Flops)</h4>
-                        <p class="text-xs text-indigo-800">向前消去需約 $\frac{2n^3}{3}$ 次浮點運算，向後代換需 $n^2$ 次。當規模 $n$ 很大時向前消去佔據大部分計算資源[span_34](start_span)[span_34](end_span)。</p>
+                        <p class="text-xs text-indigo-800">向前消去需約 $\frac{2n^3}{3}$ 次浮點運算，向後代換需 $n^2$ 次。當規模 $n$ 很大時向前消去佔據大部分計算資源。</p>
                     </div>
                 </div>
 
                 <div class="p-4 bg-indigo-50/60 rounded-xl border border-indigo-200 space-y-2">
                     <h4 class="font-bold text-indigo-900 text-xs sm:text-sm">🏢 高斯消去法的工程應用與適用狀況</h4>
-                    <p class="text-xs text-indigo-950"><strong>適用狀況</strong>：處理多變數相互耦合的聯立方程組 ($A\mathbf{x} = \mathbf{b}$)[span_35](start_span)[span_35](end_span)。</p>
+                    <p class="text-xs text-indigo-950"><strong>適用狀況</strong>：處理多變數相互耦合的聯立方程組 ($A\mathbf{x} = \mathbf{b}$)。</p>
                     <ul class="text-xs text-indigo-950 list-disc list-inside space-y-0.5">
-                        <li><strong>土木結構工程</strong>：大型橋樑與桁架 (Truss Structure) 各節點受力與位移聯立方程求解[span_36](start_span)[span_36](end_span)。</li>
-                        <li><strong>電機網路分析</strong>：多迴路基爾霍夫定律 (KVL/KCL) 節點電壓求解[span_37](start_span)[span_37](end_span)。</li>
-                        <li><strong>熱傳導分析</strong>：棒材一維熱傳導差分化後形成的三對角線矩陣 (Tridiagonal Systems) 求解[span_38](start_span)[span_38](end_span)。</li>
+                        <li><strong>土木結構工程</strong>：大型橋樑與桁架 (Truss Structure) 各節點受力與位移聯立方程求解。</li>
+                        <li><strong>電機網路分析</strong>：多迴路基爾霍夫定律 (KVL/KCL) 節點電壓求解。</li>
+                        <li><strong>熱傳導分析</strong>：棒材一維熱傳導差分化後形成的三對角線矩陣 (Tridiagonal Systems) 求解。</li>
                     </ul>
                 </div>
             </div>
@@ -462,13 +462,11 @@
                     </button>
                 </div>
 
-                <!-- 計分板看板 -->
                 <div class="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl flex items-center justify-between text-xs sm:text-sm font-semibold text-blue-900">
                     <div>作答進度：<span id="quiz-progress" class="text-blue-600 font-bold">0 / 9</span></div>
                     <div>得分統計：<span id="quiz-score" class="text-emerald-600 font-bold">0 題正確</span></div>
                 </div>
 
-                <!-- 題庫容器 -->
                 <div class="space-y-6" id="quiz-container">
                     <!-- JS 動態生成 9 道互動選擇題 -->
                 </div>
@@ -498,23 +496,23 @@
                         <tbody class="divide-y divide-slate-100 text-xs">
                             <tr>
                                 <td class="p-3 font-medium text-slate-800">單變數非線性求根</td>
-                                <td class="p-3 text-slate-600">Bisection / Newton-Raphson / Brent's Method[span_39](start_span)[span_39](end_span)</td>
-                                <td class="p-3 font-mono text-blue-600 font-bold">fzero(fun, x0)[span_40](start_span)[span_40](end_span)</td>
+                                <td class="p-3 text-slate-600">Bisection / Newton-Raphson / Brent's Method</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">fzero(fun, x0)</td>
                             </tr>
                             <tr>
                                 <td class="p-3 font-medium text-slate-800">多項式求根</td>
-                                <td class="p-3 text-slate-600">Companion Matrix 特徵值法[span_41](start_span)[span_41](end_span)</td>
-                                <td class="p-3 font-mono text-blue-600 font-bold">roots(p)[span_42](start_span)[span_42](end_span)</td>
+                                <td class="p-3 text-slate-600">Companion Matrix 特徵值法</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">roots(p)</td>
                             </tr>
                             <tr>
                                 <td class="p-3 font-medium text-slate-800">線性方程組求解 $A\mathbf{x}=\mathbf{b}$</td>
-                                <td class="p-3 text-slate-600">Gauss Elimination with Pivoting[span_43](start_span)[span_43](end_span)</td>
-                                <td class="p-3 font-mono text-blue-600 font-bold">x = A \ b[span_44](start_span)[span_44](end_span)</td>
+                                <td class="p-3 text-slate-600">Gauss Elimination with Pivoting</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">x = A \ b</td>
                             </tr>
                             <tr>
                                 <td class="p-3 font-medium text-slate-800">單變數極值搜尋</td>
-                                <td class="p-3 text-slate-600">Golden-Section Search / Parabolic Interpolation[span_45](start_span)[span_45](end_span)</td>
-                                <td class="p-3 font-mono text-blue-600 font-bold">fminbnd(fun, x1, x2)[span_46](start_span)[span_46](end_span)</td>
+                                <td class="p-3 text-slate-600">Golden-Section Search / Parabolic Interpolation</td>
+                                <td class="p-3 font-mono text-blue-600 font-bold">fminbnd(fun, x1, x2)</td>
                             </tr>
                         </tbody>
                     </table>
@@ -523,7 +521,7 @@
                 <div class="p-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-md flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-base">準備好應考與複習了嗎？</h3>
-                        <p class="text-xs text-blue-100 mt-1">掌握誤差 Trade-off、二分法 vs 牛頓法收斂特性與高斯消去法 Pivot 原理是考試的核心重點！[span_47](start_span)[span_47](end_span)</p>
+                        <p class="text-xs text-blue-100 mt-1">掌握誤差 Trade-off、二分法 vs 牛頓法收斂特性與高斯消去法 Pivot 原理是考試的核心重點！</p>
                     </div>
                 </div>
             </div>
@@ -581,11 +579,11 @@
             "Summary: 數值方法與 MATLAB 函式速查"
         ];
 
-        // 9 道觀念選擇題資料庫
+        // 9 道觀念選擇題資料庫（注意所有 LaTeX 反斜線均進行了轉義）
         const quizQuestions = [
             {
                 unit: "單元一：建模、數值方法與誤差分析",
-                q: "1. 在數學模型 $f(\text{自變數}, \text{參數}, \text{強制函數})$ 的架構中，描述物理系統本身固有特性（如蹦極跳者的質量 $m$ 或阻力係數 $c_d$）屬於下列何者？",
+                q: "1. 在數學模型 $f(\\text{自變數}, \\text{參數}, \\text{強制函數})$ 的架構中，描述物理系統本身固有特性（如蹦極跳者的質量 $m$ 或阻力係數 $c_d$）屬於下列何者？",
                 options: [
                     "(A) 應變數 (Dependent variable)",
                     "(B) 自變數 (Independent variable)",
@@ -669,7 +667,7 @@
             },
             {
                 unit: "單元三：線性系統與高斯消去法",
-                q: "8. 樸素高斯消去法 (Naive Gauss Elimination) 求解線性方程組 $A\\mathbf{x}=\\b$ 時，主要分為哪兩個步驟階段？",
+                q: "8. 樸素高斯消去法 (Naive Gauss Elimination) 求解線性方程組 $A\\mathbf{x}=\\mathbf{b}$ 時，主要分為哪兩個步驟階段？",
                 options: [
                     "(A) 矩陣轉置與克拉莫求逆",
                     "(B) 向前消去（Forward elimination，轉為上三角矩陣）與向後代換（Back substitution）",
